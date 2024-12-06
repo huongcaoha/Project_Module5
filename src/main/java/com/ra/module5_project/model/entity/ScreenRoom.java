@@ -17,8 +17,9 @@ public class ScreenRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id ;
 
-    @Column(name = "theaterId",nullable = false) //id rạp chiếu
-    private long theaterId ;
+    @ManyToOne
+    @JoinColumn(name = "theaterId" , referencedColumnName = "id")//id rạp chiếu
+    private Theater theater ;
 
     @Column(name = "screenNumber" , nullable = false) // số phòng chiếu
     private  int screenNumber ;
@@ -26,5 +27,4 @@ public class ScreenRoom {
     @Column(name = "numberOfSeats" , nullable = false) // số ghế
     private int numberOfSeats ;
 
-    private Date create_date = new Date();
 }
