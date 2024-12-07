@@ -25,8 +25,14 @@ public class AdminScreenRoomController {
     }
 
     @PostMapping
-    public ResponseEntity<ScreenRoomResponse> save(@Valid @RequestBody ScreenRoomRequest screenRoomRequest){
-        return new ResponseEntity<>(screenRoomService.save(screenRoomRequest),HttpStatus.CREATED);
+    public ResponseEntity<?> save(@Valid @RequestBody ScreenRoomRequest screenRoomRequest){
+        ScreenRoomResponse screenRoomResponse = screenRoomService.save(screenRoomRequest) ;
+        if(screenRoomResponse == null){
+            return new ResponseEntity<>("Theater existed screen name",HttpStatus.BAD_REQUEST);
+        }
+        else {
+            return new ResponseEntity<>(screenRoomResponse,HttpStatus.CREATED);
+        }
     }
 
     @PutMapping("/{id}")
@@ -36,12 +42,13 @@ public class AdminScreenRoomController {
         if(screenRoomResponse != null){
             return  new ResponseEntity<>(screenRoomResponse,HttpStatus.OK);
         }else {
-            return new ResponseEntity<>("Room number existed" , HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Theater existed screen name" , HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable long id){
+        screenRoomService.deleteById(id);
         return new ResponseEntity<>("Delete successfully",HttpStatus.OK);
     }
 

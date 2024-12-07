@@ -38,20 +38,26 @@ public class ScreenRoomServiceImpl implements ScreenRoomService{
 
     @Override
     public ScreenRoomResponse save(ScreenRoomRequest screenRoomRequest) {
-        ScreenRoom screenRoom = convertToScreenRoom(screenRoomRequest);
-        ScreenRoom newScreenRoom = screenRoomRepository.save(screenRoom);
-        return convertToScreenRoomResponse(newScreenRoom);
+        boolean checkScreenNameExist = screenRoomRepository.existsByScreenName(screenRoomRequest.getScreenName(),screenRoomRequest.getTheaterId());
+        if(checkScreenNameExist){
+            return null ;
+        }
+        else {
+            ScreenRoom screenRoom = convertToScreenRoom(screenRoomRequest);
+            ScreenRoom newScreenRoom = screenRoomRepository.save(screenRoom);
+            return convertToScreenRoomResponse(newScreenRoom);
+        }
     }
 
     @Override
     public ScreenRoomResponse update(long id, ScreenRoomRequest screenRoomRequest) {
         ScreenRoomResponse screenRoomOld = findById(id);
-        boolean checkScreenNumberExist = screenRoomRepository.existsByScreenNumber(screenRoomRequest.getScreenNumber());
-        if(checkScreenNumberExist && screenRoomOld.getScreenNumber() == screenRoomRequest.getScreenNumber()){
-            checkScreenNumberExist = false ;
+        boolean checkScreenNameExist = screenRoomRepository.existsByScreenName(screenRoomRequest.getScreenName(),screenRoomRequest.getTheaterId());
+        if(checkScreenNameExist && screenRoomOld.getScreenName().equals(screenRoomRequest.getScreenName())){
+            checkScreenNameExist = false ;
         }
 
-        if(checkScreenNumberExist){
+        if(checkScreenNameExist){
             return  null ;
         }else {
             ScreenRoom screenRoom = convertToScreenRoom(screenRoomRequest);
@@ -77,7 +83,7 @@ public class ScreenRoomServiceImpl implements ScreenRoomService{
     public ScreenRoom convertToScreenRoom(ScreenRoomRequest screenRoomRequest) {
         return ScreenRoom.builder()
                 .theater(theaterRepository.findById(screenRoomRequest.getTheaterId()).orElseThrow(() -> new NoSuchElementException("Not found theater")))
-                .screenNumber(screenRoomRequest.getScreenNumber())
+                .screenName(screenRoomRequest.getScreenName())
                 .numberOfSeats(screenRoomRequest.getNumberOfSeats())
                 .build();
     }
@@ -87,7 +93,7 @@ public class ScreenRoomServiceImpl implements ScreenRoomService{
        return ScreenRoomResponse.builder()
                 .id(screenRoom.getId())
                 .numberOfSeats(screenRoom.getNumberOfSeats())
-                .screenNumber(screenRoom.getScreenNumber())
+                .screenName(screenRoom.getScreenName())
                 .theaterName(screenRoom.getTheater().getName())
                 .build();
     }

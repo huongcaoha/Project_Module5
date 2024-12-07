@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Builder
 public class SeatPagination {
-    private List<Seat> seats ;
+    private List<SeatResponse> seats ;
     private int totalPage;
     private int size ;
     private int currentPage ;

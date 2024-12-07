@@ -21,8 +21,8 @@ public class ScreenRoom {
     @JoinColumn(name = "theaterId" , referencedColumnName = "id")//id rạp chiếu
     private Theater theater ;
 
-    @Column(name = "screenNumber" , nullable = false) // số phòng chiếu
-    private  int screenNumber ;
+    @Column(name = "screenName" , nullable = false) // số phòng chiếu
+    private  String screenName ;
 
     @Column(name = "numberOfSeats" , nullable = false) // số ghế
     private int numberOfSeats ;

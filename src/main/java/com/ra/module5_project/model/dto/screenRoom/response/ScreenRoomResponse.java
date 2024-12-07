@@ -12,6 +12,6 @@ import lombok.*;
 public class ScreenRoomResponse {
     private long id ;
     private String theaterName ;
-    private  int screenNumber ;
+    private  String screenName ;
     private int numberOfSeats ;
 }
