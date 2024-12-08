@@ -28,7 +28,7 @@ public class AdminScreenRoomController {
     public ResponseEntity<?> save(@Valid @RequestBody ScreenRoomRequest screenRoomRequest){
         ScreenRoomResponse screenRoomResponse = screenRoomService.save(screenRoomRequest) ;
         if(screenRoomResponse == null){
-            return new ResponseEntity<>("Theater existed screen name",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Theater existed screen name or the theater is full",HttpStatus.BAD_REQUEST);
         }
         else {
             return new ResponseEntity<>(screenRoomResponse,HttpStatus.CREATED);

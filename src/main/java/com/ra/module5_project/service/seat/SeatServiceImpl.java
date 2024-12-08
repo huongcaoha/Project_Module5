@@ -23,7 +23,6 @@ public class SeatServiceImpl implements SeatService{
     @Autowired
     private ScreenRoomRepository screenRoomRepository;
 
-    List<String> rows = new ArrayList<>(Arrays.asList("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","Ư","X","Y","Z"));
     @Override
     public SeatPagination findAllAndSearch(Pageable pageable, String search) {
         Page<Seat> page = null ;
@@ -95,7 +94,7 @@ public class SeatServiceImpl implements SeatService{
     Seat convertToSeat(SeatRequest seatRequest){
         return Seat.builder()
                 .seatName(seatRequest.getSeatName())
-                .status(seatRequest.isStatus())
+                .status(seatRequest.getStatus())
                 .screenRoom(screenRoomRepository.findById(seatRequest.getScreenRoomId())
                         .orElseThrow(() -> new NoSuchElementException("Not found screen room")))
                 .build();
@@ -106,7 +105,7 @@ public class SeatServiceImpl implements SeatService{
                 .id(seat.getId())
                 .screenName(seat.getScreenRoom().getScreenName())
                 .seatName(seat.getSeatName())
-                .status(seat.isStatus())
+                .status(seat.getStatus())
                 .build();
     }
 }

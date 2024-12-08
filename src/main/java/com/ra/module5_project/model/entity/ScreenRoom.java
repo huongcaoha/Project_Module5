@@ -24,7 +24,13 @@ public class ScreenRoom {
     @Column(name = "screenName" , nullable = false) // số phòng chiếu
     private  String screenName ;
 
-    @Column(name = "numberOfSeats" , nullable = false) // số ghế
-    private int numberOfSeats ;
+    @Column(name = "numberRowSeat" , nullable = false) // số cột ghế
+    private int numberRowSeat ;
+
+    @Column(name = "numberColSeat" , nullable = false) // số hàng ghế
+    private int numberColSeat ;
+
+    @Column(name = "isDoubleSeat" , nullable = false) // có  hàng ghế đôi
+    private boolean isDoubleSeat = true;
 
 }

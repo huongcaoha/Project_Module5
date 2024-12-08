@@ -25,7 +25,14 @@ public class ScreenRoomRequest {
 
     @NotNull(message = "number of seat can not null")
     @EvenOrOdd(message = "number of seat is number even")
+    @Min(2)
+    private int numberColSeat ;
+
+    @NotNull(message = "number of seat can not null")
     @Min(1)
-    private int numberOfSeats ;
+    private int numberRowSeat ;
+
+    @NotNull(message = "Is double seat can not null")
+    private Boolean isDoubleSeat ;
 
 }

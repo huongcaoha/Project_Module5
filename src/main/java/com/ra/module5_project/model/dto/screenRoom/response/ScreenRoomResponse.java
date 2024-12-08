@@ -13,5 +13,7 @@ public class ScreenRoomResponse {
     private long id ;
     private String theaterName ;
     private  String screenName ;
-    private int numberOfSeats ;
+    private int numberRowSeat ;
+    private int numberColSeat ;
+    private boolean isDoubleSeat ;
 }

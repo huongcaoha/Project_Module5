@@ -14,5 +14,5 @@ public class SeatResponse {
 
     private String seatName ;
 
-    private boolean status ;
+    private int status ;
 }

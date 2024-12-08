@@ -21,5 +21,5 @@ public class SeatRequest {
     private String seatName ;
 
     @NotNull(message = "Status can not null")
-    private boolean status = true ;
+    private int status = 1 ;
 }

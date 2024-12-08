@@ -22,5 +22,5 @@ public class Seat {
     @Column(name = "seatName" , nullable = false)
     private String seatName ;
 
-    private boolean status = true ;
+    private int status = 1 ;
 }

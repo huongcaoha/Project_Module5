@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface ScreenRoomRepository extends JpaRepository<ScreenRoom,Long> {
     @Query("select s from ScreenRoom s where s.screenName like %:search%")
     Page<ScreenRoom> findAllAndSearch(Pageable pageable , @Param("search") String search);
@@ -14,5 +16,6 @@ public interface ScreenRoomRepository extends JpaRepository<ScreenRoom,Long> {
     @Query("select count(s) > 0 from ScreenRoom s where s.screenName = :screenName and s.theater.id = :theaterId")
     boolean existsByScreenName(@Param("screenName") String screenName, @Param("theaterId") long theaterId);
 
-
+    @Query("select s from ScreenRoom s where s.theater.id = :theaterId")
+    List<ScreenRoom> getScreenRoomByTheaterId(@Param("theaterId") long id);
 }
