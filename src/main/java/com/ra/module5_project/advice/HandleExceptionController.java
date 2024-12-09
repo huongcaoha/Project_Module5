@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -25,7 +26,6 @@ public class HandleExceptionController {
         );
         return new DataError<>(maps,400);
     }
-
 
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -52,6 +52,12 @@ public class HandleExceptionController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public DataError<String> handleNotFound(NoSuchElementException ex){
         return new DataError<>(ex.getMessage(),404);
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public DataError<String> handleDateTimeParseException(DateTimeParseException ex){
+        return new DataError<>(ex.getMessage(),400);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

@@ -1,13 +1,8 @@
 package com.ra.module5_project.model.dto.showTime.request;
 
-import com.ra.module5_project.model.entity.Movie;
 import com.ra.module5_project.model.entity.ShowTime;
-import com.ra.module5_project.model.entity.Theater;
 import com.ra.module5_project.validator.CheckDateFutureOrPresent;
 import com.ra.module5_project.validator.ShowTimeExist;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -15,20 +10,19 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
 @Getter
+@Setter
 @Builder
-public class ShowTimeRequest {
+public class ShowTimeRequestUpdate {
     @NotNull(message = "Movie id can not null")
     @Min(1)
     private long movieId ;
 
     @NotBlank(message = "Show time can not blank")
     @CheckDateFutureOrPresent(entityClass = ShowTime.class , fieldName = "showTime")
-    @ShowTimeExist(entityClass = ShowTime.class ,fieldName = "showTime")
     private String showTime ;
 
     @NotNull(message = "Theater id can not null")

@@ -13,8 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@Table(name = "ticket")
-public class Ticket {
+@Table(name = "bookings")
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id ;
@@ -27,17 +27,13 @@ public class Ticket {
     @JoinColumn(name = "userId" , referencedColumnName = "id")
     private User user ;
 
-    @ManyToMany // Sử dụng ManyToMany cho mối quan hệ giữa vé và ghế
-    @JoinTable(
-            name = "ticket_seat", // Tên bảng liên kết
-            joinColumns = @JoinColumn(name = "ticket_id"), // Tên cột trong bảng ticket
-            inverseJoinColumns = @JoinColumn(name = "seat_id") // Tên cột trong bảng seat
-    )
-    private List<Seat> seats; // Danh sách ghế đã đặt
+    private int totalSeat ;
 
-    @Column(name = "totalPrice" , nullable = false)
-    private  double totalPrice ;
+    @Column(name = "totalPriceMovie" , nullable = false)
+    private  double totalPriceMovie ;
 
-    private StatusTicket status ;
+    private double totalPriceFood ;
+
+    private boolean status =true ;
     private LocalDateTime created_at = LocalDateTime.now();
 }

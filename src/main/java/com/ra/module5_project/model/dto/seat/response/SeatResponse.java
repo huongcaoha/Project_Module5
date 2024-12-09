@@ -1,5 +1,6 @@
 package com.ra.module5_project.model.dto.seat.response;
 
+import com.ra.module5_project.model.constant.TypeSeat;
 import lombok.*;
 
 @AllArgsConstructor
@@ -13,6 +14,8 @@ public class SeatResponse {
     private String screenName ;
 
     private String seatName ;
+
+    private TypeSeat typeSeat ;
 
     private int status ;
 }

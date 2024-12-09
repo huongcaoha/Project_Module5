@@ -32,4 +32,6 @@ public class ShowTime {
     @ManyToOne
     @JoinColumn(name = "theaterId" , referencedColumnName = "id")
     private Theater theater ;
+
+    private LocalDateTime created_date = LocalDateTime.now();
 }
