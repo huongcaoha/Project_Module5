@@ -1,5 +1,6 @@
 package com.ra.module5_project.model.dto.showTime.request;
 
+import com.ra.module5_project.model.constant.TypeMovie;
 import com.ra.module5_project.model.entity.Movie;
 import com.ra.module5_project.model.entity.ShowTime;
 import com.ra.module5_project.model.entity.Theater;
@@ -30,6 +31,9 @@ public class ShowTimeRequest {
     @CheckDateFutureOrPresent(entityClass = ShowTime.class , fieldName = "showTime")
     @ShowTimeExist(entityClass = ShowTime.class ,fieldName = "showTime")
     private String showTime ;
+
+    @NotBlank(message = "Type movie can not blank")
+    private String typeMovie;
 
     @NotNull(message = "Theater id can not null")
     @Min(1)

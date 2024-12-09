@@ -1,5 +1,6 @@
 package com.ra.module5_project.model.entity;
 
+import com.ra.module5_project.model.constant.TypeMovie;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,5 +34,6 @@ public class ShowTime {
     @JoinColumn(name = "theaterId" , referencedColumnName = "id")
     private Theater theater ;
 
+    private TypeMovie typeMovie;
     private LocalDateTime created_date = LocalDateTime.now();
 }

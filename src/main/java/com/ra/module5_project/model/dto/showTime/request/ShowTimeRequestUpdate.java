@@ -25,6 +25,9 @@ public class ShowTimeRequestUpdate {
     @CheckDateFutureOrPresent(entityClass = ShowTime.class , fieldName = "showTime")
     private String showTime ;
 
+    @NotBlank(message = "Type movie can not blank")
+    private String typeMovie;
+
     @NotNull(message = "Theater id can not null")
     @Min(1)
     private long theaterId ;

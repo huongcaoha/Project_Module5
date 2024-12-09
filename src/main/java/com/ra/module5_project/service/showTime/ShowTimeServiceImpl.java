@@ -1,5 +1,6 @@
 package com.ra.module5_project.service.showTime;
 
+import com.ra.module5_project.model.constant.TypeMovie;
 import com.ra.module5_project.model.dto.showTime.request.ShowTimeRequest;
 import com.ra.module5_project.model.dto.showTime.request.ShowTimeRequestUpdate;
 import com.ra.module5_project.model.dto.showTime.response.ShowTimePagination;
@@ -65,12 +66,20 @@ public class ShowTimeServiceImpl implements ShowTimeService{
         if(checkShowTimeExist){
             return null ;
         }else {
+            TypeMovie typeMovie = null ;
+            try {
+                typeMovie = TypeMovie.valueOf(showTimeRequestUpdate.getTypeMovie().toUpperCase());
+            }catch (IllegalArgumentException e){
+                throw new IllegalArgumentException("Invalid type seat: " + showTimeRequestUpdate.getTypeMovie());
+            }
             ShowTime rs = ShowTime.builder()
                     .id(oldShowTime.getId())
                     .movie(movieService.findById(showTimeRequestUpdate.getMovieId()))
                     .showDate(showDate.toLocalDate())
                     .showTime(showDate)
                     .theater(theaterService.findById(showTimeRequestUpdate.getTheaterId()))
+                    .typeMovie(typeMovie)
+                    .created_date(LocalDateTime.now())
                     .build();
             return showTimeRepository.save(rs);
         }
@@ -95,11 +104,20 @@ public class ShowTimeServiceImpl implements ShowTimeService{
         }catch (Exception e){
             throw new RuntimeException("Show time invalid");
         }
+
+        TypeMovie typeMovie = null ;
+        try {
+            typeMovie = TypeMovie.valueOf(showTimeRequest.getTypeMovie().toUpperCase());
+        }catch (IllegalArgumentException e){
+            throw new IllegalArgumentException("Invalid type seat: " + showTimeRequest.getTypeMovie());
+        }
         return ShowTime.builder()
                 .movie(movieService.findById(showTimeRequest.getMovieId()))
                 .showDate(showTime.toLocalDate())
                 .showTime(showTime)
+                .typeMovie(typeMovie)
                 .theater(theaterService.findById(showTimeRequest.getTheaterId()))
+                .created_date(LocalDateTime.now())
                 .build();
     }
 }

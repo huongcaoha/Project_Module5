@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @Builder
 public class BookingPagination {
-    private List<Booking> tickets ;
+    private List<Booking> bookings ;
     private int totalPage;
     private int size ;
     private int currentPage ;

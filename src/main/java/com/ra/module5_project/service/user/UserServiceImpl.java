@@ -150,7 +150,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(long id) {
-        return userRepository.findUserById(id);
+        return userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Not found user"));
     }
 
     @Override

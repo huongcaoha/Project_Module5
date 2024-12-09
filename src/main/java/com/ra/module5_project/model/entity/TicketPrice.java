@@ -19,7 +19,7 @@ public class TicketPrice {
     private long id ;
 
     @Column(name = "typeSeat",nullable = false)
-    private TypeSeat typeSeat ;
+    private String typeSeat ;
 
     @Column(name = "typeMovie", nullable = false)
     private String typeMovie;  //2D , 3D
@@ -33,5 +33,9 @@ public class TicketPrice {
     @Column(name = "price" , nullable = false)
     private double price ;
 
+    @Column(name = "dayOfWeeks" , nullable = false)
+    private int dayOfWeeks ;
+
+    private boolean isHoliday ;
 
 }

@@ -8,5 +8,4 @@ import org.springframework.data.repository.query.Param;
 
 public interface BookingRepository extends JpaRepository<Booking,Long> {
 
-    boolean checkTicketSeatExist(@Param("showTimeId") long showTimeId,@Param("seatId") long seatId);
 }
