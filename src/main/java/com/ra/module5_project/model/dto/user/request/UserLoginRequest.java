@@ -13,5 +13,4 @@ public class UserLoginRequest {
     private String username ;
     @NotBlank(message = "password can not blank")
     private String password ;
-
 }
