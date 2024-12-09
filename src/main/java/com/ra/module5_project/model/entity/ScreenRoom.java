@@ -17,14 +17,20 @@ public class ScreenRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id ;
 
-    @Column(name = "theaterId",nullable = false) //id rạp chiếu
-    private long theaterId ;
+    @ManyToOne
+    @JoinColumn(name = "theaterId" , referencedColumnName = "id")//id rạp chiếu
+    private Theater theater ;
 
-    @Column(name = "screenNumber" , nullable = false) // số phòng chiếu
-    private  int screenNumber ;
+    @Column(name = "screenName" , nullable = false) // số phòng chiếu
+    private  String screenName ;
 
-    @Column(name = "numberOfSeats" , nullable = false) // số ghế
-    private int numberOfSeats ;
+    @Column(name = "numberRowSeat" , nullable = false) // số cột ghế
+    private int numberRowSeat ;
 
-    private Date create_date = new Date();
+    @Column(name = "numberColSeat" , nullable = false) // số hàng ghế
+    private int numberColSeat ;
+
+    @Column(name = "isDoubleSeat" , nullable = false) // có  hàng ghế đôi
+    private boolean isDoubleSeat = true;
+
 }

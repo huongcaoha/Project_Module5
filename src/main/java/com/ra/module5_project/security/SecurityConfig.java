@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api.myService.com/v1/admin/**").hasAuthority("ADMIN");
+//                    auth.requestMatchers("/api.myService.com/v1/admin/**").hasAuthority("ADMIN");
                     auth.requestMatchers("/api.myService.com/v1/users/**").hasAuthority("USER");
                     auth.anyRequest().permitAll();
                 }).sessionManagement(auth -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

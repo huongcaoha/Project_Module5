@@ -15,7 +15,7 @@ public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id ;
 
-    @Column(name = "cityName" , nullable = false)
+    @Column(name = "cityName" , nullable = false , unique = true)
     private String cityName ;
 
 }

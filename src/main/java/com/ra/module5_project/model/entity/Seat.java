@@ -19,8 +19,8 @@ public class Seat {
     @JoinColumn(name = "screenId" , referencedColumnName = "id")
     private ScreenRoom screenRoom ;
 
-    @Column(name = "seatNumber" , nullable = false)
-    private String seatNumber ;
+    @Column(name = "seatName" , nullable = false)
+    private String seatName ;
 
-    private boolean status = true ;
+    private int status = 1 ;
 }
