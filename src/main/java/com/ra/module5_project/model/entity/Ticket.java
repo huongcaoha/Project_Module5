@@ -4,6 +4,7 @@ import com.ra.module5_project.model.constant.StatusTicket;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -38,4 +39,5 @@ public class Ticket {
     private  double totalPrice ;
 
     private StatusTicket status ;
+    private LocalDateTime created_at = LocalDateTime.now();
 }
