@@ -1,5 +1,6 @@
 package com.ra.module5_project.advice;
 
+import com.ra.module5_project.exception.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -58,4 +59,12 @@ public class HandleExceptionController {
     public DataError<String> handleNoResource(NoResourceFoundException ex){
         return new DataError<>(ex.getMessage(),404);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public DataError<String> handlerErrorResourceNotFoundException(ResourceNotFoundException exception){
+        String error = exception.getMessage();
+        return new  DataError<>(error,404);
+    }
+
 }
