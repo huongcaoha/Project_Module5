@@ -3,6 +3,7 @@ package com.ra.module5_project.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -23,7 +24,7 @@ public class ShowTime {
     private Movie movie ;
 
     @Column(name = "showDate",nullable = false)
-    private Date showDate ;
+    private LocalDate showDate ;
 
     @Column(name = "showTime" ,nullable = false)
     private LocalDateTime showTime ;
