@@ -1,5 +1,6 @@
 package com.ra.module5_project.service.screenRoom;
 
+import com.ra.module5_project.model.constant.TypeSeat;
 import com.ra.module5_project.model.dto.screenRoom.request.ScreenRoomRequest;
 import com.ra.module5_project.model.dto.screenRoom.response.ScreenRoomPagination;
 import com.ra.module5_project.model.dto.screenRoom.response.ScreenRoomResponse;
@@ -73,19 +74,31 @@ public class ScreenRoomServiceImpl implements ScreenRoomService{
     }
 
     public void addSeatForScreenRoom(long idRoom ,int numberRow , int numberCol , boolean isDoubleSeat){
-       int row = numberRow;
-        if(isDoubleSeat){
-            row += 1 ;
-        }
-        for(int i = 1 ; i <= row ; i++){
+
+        for(int i = 1 ; i <= numberRow ; i++){
             for(int j = 1 ; j <= numberCol ; j++){
                 Seat seat = Seat.builder()
                         .screenRoom(screenRoomRepository.findById(idRoom).orElseThrow(() -> new NoSuchElementException("Not found screen room")))
                         .seatName(nameRowSeats.get(i) + j)
                         .status(1)
+                        .typeSeat(TypeSeat.STANDARD)
                         .build();
                 seatRepository.save(seat);
             }
+        }
+
+        if(isDoubleSeat){
+            int row = numberRow + 1;
+           for(int i = 1 ; i <= numberCol ; i++){
+               Seat seat = Seat.builder()
+                       .screenRoom(screenRoomRepository.findById(idRoom).orElseThrow(() -> new NoSuchElementException("Not found screen room")))
+                       .seatName(nameRowSeats.get(row) + i)
+                       .status(1)
+                       .typeSeat(TypeSeat.DOUBLE)
+                       .build();
+               seatRepository.save(seat);
+           }
+
         }
     }
 

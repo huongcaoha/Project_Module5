@@ -1,5 +1,6 @@
 package com.ra.module5_project.model.entity;
 
+import com.ra.module5_project.model.constant.TypeMovie;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,9 @@ public class ShowTime {
     private long id ;
 
     @ManyToOne
+    @JoinColumn(name = "screenRoomId" , referencedColumnName = "id")
+    private ScreenRoom screenRoom ;
+    @ManyToOne
     @JoinColumn(name = "movieId",referencedColumnName = "id")
     private Movie movie ;
 
@@ -32,4 +36,7 @@ public class ShowTime {
     @ManyToOne
     @JoinColumn(name = "theaterId" , referencedColumnName = "id")
     private Theater theater ;
+
+    private TypeMovie typeMovie;
+    private LocalDateTime created_date = LocalDateTime.now();
 }

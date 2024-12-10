@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/comments")
+@RequestMapping("/api.myService.com/v1/admin/comments")
 public class CommentAdminController {
     @Autowired
     private CommentService commentService;

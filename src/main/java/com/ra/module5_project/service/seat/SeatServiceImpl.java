@@ -1,5 +1,6 @@
 package com.ra.module5_project.service.seat;
 
+import com.ra.module5_project.model.constant.TypeSeat;
 import com.ra.module5_project.model.dto.seat.request.SeatRequest;
 import com.ra.module5_project.model.dto.seat.response.SeatPagination;
 import com.ra.module5_project.model.dto.seat.response.SeatResponse;
@@ -92,9 +93,16 @@ public class SeatServiceImpl implements SeatService{
     }
 
     Seat convertToSeat(SeatRequest seatRequest){
+        TypeSeat typeSeat;
+        try {
+            typeSeat = TypeSeat.valueOf(seatRequest.getTypeSeat().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid type seat: " + seatRequest.getTypeSeat());
+        }
         return Seat.builder()
                 .seatName(seatRequest.getSeatName())
                 .status(seatRequest.getStatus())
+                .typeSeat(typeSeat)
                 .screenRoom(screenRoomRepository.findById(seatRequest.getScreenRoomId())
                         .orElseThrow(() -> new NoSuchElementException("Not found screen room")))
                 .build();
@@ -106,6 +114,7 @@ public class SeatServiceImpl implements SeatService{
                 .screenName(seat.getScreenRoom().getScreenName())
                 .seatName(seat.getSeatName())
                 .status(seat.getStatus())
+                .typeSeat(seat.getTypeSeat())
                 .build();
     }
 }

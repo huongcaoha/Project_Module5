@@ -1,5 +1,6 @@
 package com.ra.module5_project.model.entity;
 
+import com.ra.module5_project.model.constant.TypeSeat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,5 +23,6 @@ public class Seat {
     @Column(name = "seatName" , nullable = false)
     private String seatName ;
 
+    private TypeSeat typeSeat ;
     private int status = 1 ;
 }

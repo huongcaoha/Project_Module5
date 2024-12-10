@@ -20,6 +20,9 @@ public class SeatRequest {
     @NotBlank(message = "Seat name can not blank")
     private String seatName ;
 
+    @NotBlank
+    private String typeSeat ;
+
     @NotNull(message = "Status can not null")
     private int status = 1 ;
 }
