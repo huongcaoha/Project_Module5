@@ -1,5 +1,7 @@
 package com.ra.module5_project.service.category;
 
+import com.ra.module5_project.exception.BadRequestException;
+import com.ra.module5_project.exception.CustomException;
 import com.ra.module5_project.exception.NoResourceFoundException;
 import com.ra.module5_project.exception.ResourceNotFoundException;
 import com.ra.module5_project.model.dto.category.CategoryDTO;
@@ -40,39 +42,31 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category update(CategoryUpdateDTO categoryUpdateDTO, Long id) {
+    public Category update(CategoryUpdateDTO categoryUpdateDTO, Long id) throws BadRequestException {
         Category category = findById(id);
 
         // Nếu tên mới khác với tên hiện tại, kiểm tra sự tồn tại
         if (!category.getCategoryName().equals(categoryUpdateDTO.getCategoryName())) {
             boolean check = categoryRepository.existsByCategoryNameAndIdNot(categoryUpdateDTO.getCategoryName().trim(), id);
             if (check) {
-                throw new ResourceNotFoundException("Danh mục đã tồn tại");
+                throw new BadRequestException("Danh mục đã tồn tại");
             }
             category.setCategoryName(categoryUpdateDTO.getCategoryName()); // Trim các khoảng trắng nếu có
         }
         category.setDescription(categoryUpdateDTO.getDescription());
         category.setStatus(true);
         return categoryRepository.save(category);
-//        boolean checkNameExist = categoryRepository.existsByCategoryName(categoryUpdateDTO.getCategoryName());
-//        if(checkNameExist && category.getCategoryName().equalsIgnoreCase(categoryUpdateDTO.getCategoryName())){
-//            checkNameExist = false ;
-//        }
-//        if(checkNameExist){
-//            throw new ResourceNotFoundException("Danh mục đã tồn tại");
-//        }else {
-//            category.setCategoryName(categoryUpdateDTO.getCategoryName());
-//            category.setDescription(categoryUpdateDTO.getDescription());
-//            category.setStatus(true);
-//            return categoryRepository.save(category);
-//        }
 
 
     }
 
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws CustomException {
+        boolean check = categoryRepository.existsByCategoryId(id);
+        if (check) {
+            throw new CustomException("Danh mục này đã có phim rồi");
+        }
         categoryRepository.deleteById(id);
     }
 

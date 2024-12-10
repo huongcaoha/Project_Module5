@@ -1,5 +1,7 @@
 package com.ra.module5_project.advice;
 
+import com.ra.module5_project.exception.BadRequestException;
+import com.ra.module5_project.exception.CustomException;
 import com.ra.module5_project.exception.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -67,4 +69,19 @@ public class HandleExceptionController {
         return new  DataError<>(error,404);
     }
 
+    @ExceptionHandler(CustomException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public DataError<?> handlerErrorCustomerException(CustomException exception){
+        Map<String,String> errors = new HashMap<>();
+        errors.put("message",exception.getMessage());
+        return new DataError<>(errors,401);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public DataError<?> handlerErrorBadRequestException(BadRequestException exception) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", exception.getMessage());
+        return new DataError<>(errors,400);
+    }
 }

@@ -27,9 +27,10 @@ public class Movie {
     private String poster;
     private String trailer;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany
+    @JoinTable(
+            name = "movie_"
+    )
 
     @Enumerated(EnumType.STRING)
     private StatusMovie statusMovie;

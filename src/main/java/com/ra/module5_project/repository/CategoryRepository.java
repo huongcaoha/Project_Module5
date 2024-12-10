@@ -11,6 +11,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("select count(c) > 0 from Category  c where c.categoryName = :categoryName")
     boolean existsByCategoryName(String categoryName);
 
+    @Query("select count(m) > 0 from Movie m where m.category.id = :categoryId")
+    boolean existsByCategoryId(Long categoryId);
+
     @Query("select count(c.id) > 0 from Category c where c.categoryName like :categoryName AND c.id != :id")
     boolean existsByCategoryNameAndIdNot(String categoryName, Long id);
 

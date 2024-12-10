@@ -1,5 +1,7 @@
 package com.ra.module5_project.controller.admin;
 
+import com.ra.module5_project.exception.BadRequestException;
+import com.ra.module5_project.exception.CustomException;
 import com.ra.module5_project.model.dto.category.CategoryDTO;
 import com.ra.module5_project.model.dto.category.CategoryUpdateDTO;
 import com.ra.module5_project.model.entity.Category;
@@ -13,6 +15,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/v1/admin/categories")
 public class CategoryController {
@@ -20,15 +24,22 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<?> findAll(@PageableDefault(page = 0, size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Category> categories = categoryService.findAll(pageable);
+    public ResponseEntity<?> findAll(@RequestParam(defaultValue = "") String search, @PageableDefault(page = 0, size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<Category> categories;
+        if(search == null || search.isEmpty()) {
+            categories = categoryService.findAll(pageable);
+        } else {
+            categories = categoryService.findByCategoryName(search, pageable);
+        }
         return ResponseEntity.ok(categories);
     }
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@Valid @RequestBody CategoryDTO categoryDTO) {
         Category category = categoryService.create(categoryDTO);
-        return ResponseEntity.ok(category);
+        return ResponseEntity
+                .created(URI.create("/categories/" + category.getId()))
+                .body(category);
     }
 
     @GetMapping("/{id}")
@@ -38,25 +49,14 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody CategoryUpdateDTO categoryUpdateDTO) {
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody CategoryUpdateDTO categoryUpdateDTO) throws BadRequestException {
         Category updateCategory = categoryService.update(categoryUpdateDTO, id);
         return ResponseEntity.ok(updateCategory);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<?> delete(@PathVariable Long id) throws CustomException {
         categoryService.delete(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<?> findByName(@RequestParam String keyword,@PageableDefault(page = 0, size = 3,sort = "id",direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<Category> categories;
-        if(keyword == null || keyword.isEmpty()) {
-            categories = categoryService.findAll(pageable);
-        } else {
-            categories = categoryService.findByCategoryName(keyword, pageable);
-        }
-        return ResponseEntity.ok(categories);
     }
 }

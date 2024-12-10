@@ -36,7 +36,21 @@ public class MovieServiceImpl implements MovieService {
         // Định dạng ngày tháng năm
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+        // Lấy ngày hiện tại
+        LocalDate now = LocalDate.now();
         for (Movie movie : movies) {
+            // Kiểm tra và cập nhật trạng thái dựa trên ngày phát hành
+            if (movie.getReleaseDate().isBefore(now) || movie.getReleaseDate().isEqual(now)) {
+                movie.setStatusMovie(StatusMovie.NOW_SHOWING); // Đang chiếu
+            }
+            // Nếu phim phát hành hơn 15 ngày thì chuyển sang STOPPED_SHOWING
+            if (movie.getReleaseDate().isBefore(now.minusDays(15))) {
+                movie.setStatusMovie(StatusMovie.STOPPED_SHOWING); // Ngừng chiếu
+            }
+
+            // Lưu lại trạng thái cập nhật vào database
+            movieRepository.save(movie);
+
             MovieResponse movieResponse = MovieResponse.builder()
                     .id(movie.getId())
                     .movieName(movie.getMovieName())
