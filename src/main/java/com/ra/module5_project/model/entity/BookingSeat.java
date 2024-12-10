@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -28,6 +29,9 @@ public class BookingSeat {
     @Column(name = "quantity" , nullable = false)
     private int quantity ;
 
-    private LocalDate created_date ;
-    private LocalDate update_date ;
+    @Column(name = "price" , nullable = false)
+    private double price ;
+
+    private LocalDateTime created_date ;
+    private LocalDateTime update_date ;
 }

@@ -5,8 +5,10 @@ import com.ra.module5_project.model.dto.showTime.request.ShowTimeRequest;
 import com.ra.module5_project.model.dto.showTime.request.ShowTimeRequestUpdate;
 import com.ra.module5_project.model.dto.showTime.response.ShowTimePagination;
 import com.ra.module5_project.model.entity.ShowTime;
+import com.ra.module5_project.repository.ScreenRoomRepository;
 import com.ra.module5_project.repository.ShowTimeRepository;
 import com.ra.module5_project.service.movie.MovieService;
+import com.ra.module5_project.service.screenRoom.ScreenRoomService;
 import com.ra.module5_project.service.theater.TheaterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,8 @@ public class ShowTimeServiceImpl implements ShowTimeService{
     private MovieService movieService ;
     @Autowired
     private TheaterService theaterService ;
+    @Autowired
+    private ScreenRoomRepository screenRoomRepository ;
     @Override
     public ShowTimePagination findAllAndSearch(Pageable pageable, LocalDate showDate) {
         Page<ShowTime> page = null ;
@@ -44,8 +48,19 @@ public class ShowTimeServiceImpl implements ShowTimeService{
 
     @Override
     public ShowTime save(ShowTimeRequest showTimeRequest) {
-        ShowTime showTime = convertDTOToShowTime(showTimeRequest);
-        return showTimeRepository.save(showTime);
+        LocalDateTime showDate = null;
+        try {
+            showDate = LocalDateTime.parse(showTimeRequest.getShowTime());
+        }catch (Exception e){
+            throw new RuntimeException("Show time invalid");
+        }
+        boolean checkShowTimeExist = showTimeRepository.checkShowTimeExist(showDate,showTimeRequest.getTheaterId(),showTimeRequest.getScreenRoomId());
+        if(checkShowTimeExist){
+            return null ;
+        }else {
+            ShowTime showTime = convertDTOToShowTime(showTimeRequest);
+            return showTimeRepository.save(showTime);
+        }
     }
 
     @Override
@@ -57,7 +72,7 @@ public class ShowTimeServiceImpl implements ShowTimeService{
         }catch (Exception e){
             throw new RuntimeException("Show time invalid");
         }
-        boolean checkShowTimeExist = showTimeRepository.checkShowTimeExist(showDate);
+        boolean checkShowTimeExist = showTimeRepository.checkShowTimeExist(showDate,showTimeRequestUpdate.getTheaterId(),showTimeRequestUpdate.getScreenRoomId());
         LocalDateTime oldTime = oldShowTime.getShowTime().withMinute(0).withSecond(0).withNano(0);
         LocalDateTime newTime = showDate.withMinute(0).withSecond(0).withNano(0);
         if(checkShowTimeExist && oldTime == newTime){
@@ -75,6 +90,7 @@ public class ShowTimeServiceImpl implements ShowTimeService{
             ShowTime rs = ShowTime.builder()
                     .id(oldShowTime.getId())
                     .movie(movieService.findById(showTimeRequestUpdate.getMovieId()))
+                    .screenRoom(screenRoomRepository.findById(showTimeRequestUpdate.getScreenRoomId()).orElseThrow(() -> new NoSuchElementException("Not found screen room")))
                     .showDate(showDate.toLocalDate())
                     .showTime(showDate)
                     .theater(theaterService.findById(showTimeRequestUpdate.getTheaterId()))
@@ -113,6 +129,7 @@ public class ShowTimeServiceImpl implements ShowTimeService{
         }
         return ShowTime.builder()
                 .movie(movieService.findById(showTimeRequest.getMovieId()))
+                .screenRoom(screenRoomRepository.findById(showTimeRequest.getScreenRoomId()).orElseThrow(() -> new NoSuchElementException("Not found screen room")))
                 .showDate(showTime.toLocalDate())
                 .showTime(showTime)
                 .typeMovie(typeMovie)

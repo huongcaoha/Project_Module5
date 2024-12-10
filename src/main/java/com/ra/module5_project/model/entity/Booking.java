@@ -27,6 +27,7 @@ public class Booking {
     @JoinColumn(name = "userId" , referencedColumnName = "id")
     private User user ;
 
+    @Column(name = "totalSeat" , nullable = false)
     private int totalSeat ;
 
     @Column(name = "totalPriceMovie" , nullable = false)

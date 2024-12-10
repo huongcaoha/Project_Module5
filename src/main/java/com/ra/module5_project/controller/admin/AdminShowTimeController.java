@@ -33,8 +33,13 @@ public class AdminShowTimeController {
     }
 
     @PostMapping
-    public ResponseEntity<ShowTime> createShowTime(@Valid @RequestBody ShowTimeRequest showTimeRequest){
-        return new ResponseEntity<>(showTimeService.save(showTimeRequest),HttpStatus.CREATED);
+    public ResponseEntity<?> createShowTime(@Valid @RequestBody ShowTimeRequest showTimeRequest){
+        ShowTime showTime = showTimeService.save(showTimeRequest) ;
+        if(showTime == null){
+            return new ResponseEntity<>("Show time existed",HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>(showTime,HttpStatus.CREATED);
+        }
     }
 
     @PutMapping("/{id}")

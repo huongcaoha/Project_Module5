@@ -29,10 +29,8 @@ public class BookingRequest {
 
     @NotNull(message = "List seat can not null")
     @Size(min = 1, message = "List seat must contain at least one seat")
-    private List<Long> ListSeatId ;
+    private List<Long> listSeatId ;
 
-    @NotNull(message = "Show time can not null")
-    @Min(1)
     private double totalPriceFood ;
 
 }

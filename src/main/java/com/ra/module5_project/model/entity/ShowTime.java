@@ -21,6 +21,9 @@ public class ShowTime {
     private long id ;
 
     @ManyToOne
+    @JoinColumn(name = "screenRoomId" , referencedColumnName = "id")
+    private ScreenRoom screenRoom ;
+    @ManyToOne
     @JoinColumn(name = "movieId",referencedColumnName = "id")
     private Movie movie ;
 

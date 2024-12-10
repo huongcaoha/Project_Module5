@@ -18,6 +18,6 @@ public interface ShowTimeRepository extends JpaRepository<ShowTime,Long> {
             + "FUNCTION('YEAR', s.showTime) = FUNCTION('YEAR', :showTime) AND "
             + "FUNCTION('MONTH', s.showTime) = FUNCTION('MONTH', :showTime) AND "
             + "FUNCTION('DAY', s.showTime) = FUNCTION('DAY', :showTime) AND "
-            + "FUNCTION('HOUR', s.showTime) = FUNCTION('HOUR', :showTime)")
-    boolean checkShowTimeExist(@Param("showTime") LocalDateTime showTime);
+            + "FUNCTION('HOUR', s.showTime) = FUNCTION('HOUR', :showTime) and s.theater.id = :theaterId and s.screenRoom.id = :screenRoomId")
+    boolean checkShowTimeExist(@Param("showTime") LocalDateTime showTime,@Param("theaterId") long theaterId,@Param("screenRoomId") long screenRoomId);
 }
