@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/movies")
+@RequestMapping("/api.myService.com/v1/admin/movies")
 public class MovieController {
     @Autowired
     private MovieService movieService;

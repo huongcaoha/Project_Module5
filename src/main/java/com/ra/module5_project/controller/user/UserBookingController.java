@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api.myService.com/v1/user/bookings")
+@RequestMapping("/api.myService.com/v1/users/bookings")
 public class UserBookingController {
     @Autowired
     private BookingService bookingService ;
@@ -24,8 +24,9 @@ public class UserBookingController {
         return new ResponseEntity<>(bookingService.findAllByUserId(userPrinciple.getUser().getId()),HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<Booking> createBooking (@Valid @RequestBody BookingRequest bookingRequest){
-        return new ResponseEntity<>(bookingService.save(bookingRequest), HttpStatus.CREATED);
+    public ResponseEntity<Booking> createBooking (@Valid @RequestBody BookingRequest bookingRequest,
+                                                  @AuthenticationPrincipal UserPrinciple userPrinciple){
+        return new ResponseEntity<>(bookingService.save(bookingRequest,userPrinciple), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

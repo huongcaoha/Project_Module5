@@ -8,12 +8,14 @@ import com.ra.module5_project.repository.BookingRepository;
 import com.ra.module5_project.repository.BookingSeatRepository;
 import com.ra.module5_project.repository.SeatRepository;
 import com.ra.module5_project.repository.TicketPriceRepository;
+import com.ra.module5_project.security.principle.UserPrinciple;
 import com.ra.module5_project.service.seat.SeatService;
 import com.ra.module5_project.service.showTime.ShowTimeService;
 import com.ra.module5_project.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -50,12 +52,12 @@ public class BookingServiceImpl implements BookingService{
     }
 
     @Override
-    public Booking save(BookingRequest bookingRequest) {
+    public Booking save(BookingRequest bookingRequest , @AuthenticationPrincipal UserPrinciple userPrinciple) {
 
         double totalPriceMovie = getPriceOfSeat(showTimeService.findById(bookingRequest.getShowTimeId()),bookingRequest);
         Booking booking = Booking.builder()
                 .showTime(showTimeService.findById(bookingRequest.getShowTimeId()))
-                .user(userService.findById(bookingRequest.getUserId()))
+                .user(userPrinciple.getUser())
                 .totalSeat(bookingRequest.getListSeatId().size())
                 .totalPriceMovie(totalPriceMovie)
                 .totalPriceFood(bookingRequest.getTotalPriceFood())

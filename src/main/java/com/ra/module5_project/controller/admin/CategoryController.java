@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/admin/categories")
+@RequestMapping("/api.myService.com/v1/admin/categories")
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;

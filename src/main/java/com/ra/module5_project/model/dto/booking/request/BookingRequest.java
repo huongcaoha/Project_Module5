@@ -23,9 +23,9 @@ public class BookingRequest {
     @Min(1)
     private long showTimeId ;
 
-    @NotNull(message = "User id can not null")
-    @Min(1)
-    private long userId ;
+//    @NotNull(message = "User id can not null")
+//    @Min(1)
+//    private long userId ;
 
     @NotNull(message = "List seat can not null")
     @Size(min = 1, message = "List seat must contain at least one seat")
