@@ -1,11 +1,11 @@
+application-dev.properties
+
 HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-application-dev.properties
 
 ### STS ###
 .apt_generated
