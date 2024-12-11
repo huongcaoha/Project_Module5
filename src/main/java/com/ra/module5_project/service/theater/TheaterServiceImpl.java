@@ -71,6 +71,11 @@ public class TheaterServiceImpl implements TheaterService{
         return theaterRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Not found theater"));
     }
 
+    @Override
+    public boolean checkNameExist(String name) {
+        return theaterRepository.checkTheaterNameExist(name);
+    }
+
     Theater convertToTheater(TheaterRequest theaterRequest){
         return Theater.builder()
                 .address(theaterRequest.getAddress())

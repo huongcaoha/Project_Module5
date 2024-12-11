@@ -30,6 +30,11 @@ public class AdminTheaterController {
         return new ResponseEntity<>(theaterService.findById(id),HttpStatus.OK);
     }
 
+    @GetMapping("/checkNameExist/{name}")
+    public ResponseEntity<Boolean> checkNameExist(@PathVariable String name){
+        return new ResponseEntity<>(theaterService.checkNameExist(name),HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<Theater> createTheater(@Valid @RequestBody TheaterRequest theaterRequest){
         return new ResponseEntity<>(theaterService.save(theaterRequest),HttpStatus.CREATED);

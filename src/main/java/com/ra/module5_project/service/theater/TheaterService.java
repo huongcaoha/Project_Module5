@@ -12,4 +12,5 @@ public interface TheaterService {
     Theater update(long id , TheaterRequestUpdate theaterRequestUpdate);
     void deleteById(long id);
     Theater findById(long id);
+    boolean checkNameExist(String name);
 }
