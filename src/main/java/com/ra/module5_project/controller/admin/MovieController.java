@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,15 +23,20 @@ public class MovieController {
     private MovieService movieService;
 
     @GetMapping
-    public ResponseEntity<?> findAllMovies(@PageableDefault(page = 0, size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<MovieResponse> movies = movieService.findAll(pageable);
+    public ResponseEntity<?> findAllMovies(@RequestParam(defaultValue = "") String search, @PageableDefault(page = 0, size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        Page<MovieResponse> movies;
+        if (search == null || search.isEmpty()) {
+            movies = movieService.findAll(pageable);
+        } else {
+            movies = movieService.search(search, pageable);
+        }
         return ResponseEntity.ok(movies);
     }
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@Valid @RequestBody MovieDTO movieDTO) throws CustomException {
         MovieResponse movieResponse = movieService.create(movieDTO);
-        return ResponseEntity.ok(movieResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(movieResponse);
     }
 
     @GetMapping("/{id}")
@@ -51,14 +57,4 @@ public class MovieController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> findMovieByTitle(@RequestParam String keyword,@PageableDefault(page = 0, size = 3,sort = "id",direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<MovieResponse> movieResponses;
-        if(keyword == null || keyword.isEmpty()) {
-            movieResponses = movieService.findAll(pageable);
-        } else {
-            movieResponses = movieService.search(keyword, pageable);
-        }
-        return ResponseEntity.ok(movieResponses);
-    }
 }

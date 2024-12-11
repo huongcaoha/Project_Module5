@@ -10,6 +10,5 @@ import lombok.*;
 public class CommentResponse {
     private String userName;
     private String comment;
-    private int rating;
     private boolean status;
 }

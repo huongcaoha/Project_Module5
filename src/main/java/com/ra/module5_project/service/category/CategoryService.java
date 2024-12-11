@@ -8,7 +8,10 @@ import com.ra.module5_project.model.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface CategoryService {
+    List<Category> findAllCate();
     Page<Category> findAll(Pageable pageable);
     Category create(CategoryDTO categoryDTO);
     Category findById(Long id);

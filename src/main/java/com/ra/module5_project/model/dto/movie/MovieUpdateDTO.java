@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,11 +41,6 @@ public class MovieUpdateDTO {
     @NotBlank(message = "Poster không được để trống")
     private String poster;
 
-    @NotBlank(message = "Trailer không được để trống")
-    private String trailer;
-
-    @Min(value = 1,message = "Mã thể loại không được để trống")
-    private Long categoryId;
-
-    private String statusMovie;
+    @NotNull(message = "Danh sách thể loại không được để trống")
+    private Set<Long> categoryIds;
 }
