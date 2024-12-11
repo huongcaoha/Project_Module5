@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api.myService.com/v1/admin/categories")
@@ -31,6 +32,12 @@ public class CategoryController {
         } else {
             categories = categoryService.findByCategoryName(search, pageable);
         }
+        return ResponseEntity.ok(categories);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> findAll() {
+        List<Category> categories = categoryService.findAllCate();
         return ResponseEntity.ok(categories);
     }
 

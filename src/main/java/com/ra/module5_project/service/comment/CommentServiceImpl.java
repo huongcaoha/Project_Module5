@@ -40,7 +40,6 @@ public class CommentServiceImpl implements CommentService {
             CommentResponse commentResponse = CommentResponse.builder()
                     .userName(comment.getUser().getUsername())
                     .comment(comment.getComment())
-                    .rating(comment.getRating())
                     .status(comment.isStatus())
                     .build();
             responses.add(commentResponse);
@@ -61,7 +60,6 @@ public class CommentServiceImpl implements CommentService {
             CommentResponse commentResponse = CommentResponse.builder()
                     .userName(comment.getUser().getUsername())
                     .comment(comment.getComment())
-                    .rating(comment.getRating())
                     .status(comment.isStatus())
                     .build();
             responses.add(commentResponse);
@@ -90,14 +88,12 @@ public class CommentServiceImpl implements CommentService {
         newComment.setUser(userPrinciple.getUser());
         newComment.setMovie(movie);
         newComment.setComment(commentDTO.getComment());
-        newComment.setRating(commentDTO.getRating());
         newComment.setStatus(true);
         commentRepository.save(newComment);
 
         return CommentResponse.builder()
                 .userName(userPrinciple.getUsername())
                 .comment(newComment.getComment())
-                .rating(newComment.getRating())
                 .status(newComment.isStatus())
                 .build();
     }
@@ -120,12 +116,10 @@ public class CommentServiceImpl implements CommentService {
             throw new CustomException("Bạn chưa bình luận sản phẩm này");
         }
         updateComment.setComment(commentDTO.getComment());
-        updateComment.setRating(commentDTO.getRating());
         commentRepository.save(updateComment);
         return CommentResponse.builder()
                 .userName(userPrinciple.getUsername())
                 .comment(updateComment.getComment())
-                .rating(updateComment.getRating())
                 .status(updateComment.isStatus())
                 .build();
     }
@@ -161,7 +155,6 @@ public class CommentServiceImpl implements CommentService {
         return CommentResponse.builder()
                 .userName(comment.getUser().getUsername())
                 .comment(comment.getComment())
-                .rating(comment.getRating())
                 .status(comment.isStatus())
                 .build();
     }

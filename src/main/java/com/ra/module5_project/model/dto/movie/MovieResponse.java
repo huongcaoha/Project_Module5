@@ -2,6 +2,8 @@ package com.ra.module5_project.model.dto.movie;
 
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,7 +19,5 @@ public class MovieResponse {
     private String description;
     private String language;
     private String poster;
-    private String trailer;
-    private String categoryName;
-    private String movieStatus;
+    private List<String> categoryNames;
 }

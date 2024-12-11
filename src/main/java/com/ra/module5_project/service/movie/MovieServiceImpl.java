@@ -20,7 +20,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieServiceImpl implements MovieService {
@@ -30,44 +33,26 @@ public class MovieServiceImpl implements MovieService {
     private CategoryRepository categoryRepository;
     @Override
     public Page<MovieResponse> findAll(Pageable pageable) {
-        List<Movie> movies = movieRepository.findAll(pageable).getContent();
-        List<MovieResponse> movieResponses = new ArrayList<>();
-
         // Định dạng ngày tháng năm
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        Page<MovieResponse> movies = movieRepository.findAll(pageable).map((movie)->{
 
-        // Lấy ngày hiện tại
-        LocalDate now = LocalDate.now();
-        for (Movie movie : movies) {
-            // Kiểm tra và cập nhật trạng thái dựa trên ngày phát hành
-            if (movie.getReleaseDate().isBefore(now) || movie.getReleaseDate().isEqual(now)) {
-                movie.setStatusMovie(StatusMovie.NOW_SHOWING); // Đang chiếu
-            }
-            // Nếu phim phát hành hơn 15 ngày thì chuyển sang STOPPED_SHOWING
-            if (movie.getReleaseDate().isBefore(now.minusDays(15))) {
-                movie.setStatusMovie(StatusMovie.STOPPED_SHOWING); // Ngừng chiếu
-            }
-
-            // Lưu lại trạng thái cập nhật vào database
-            movieRepository.save(movie);
-
-            MovieResponse movieResponse = MovieResponse.builder()
+            return MovieResponse.builder()
                     .id(movie.getId())
                     .movieName(movie.getMovieName())
                     .duration(movie.getDuration())
                     .director(movie.getDirector())
                     .cast(movie.getCast())
                     .poster(movie.getPoster())
-                    .trailer(movie.getTrailer())
                     .language(movie.getLanguage())
                     .description(movie.getDescription())
-                    .categoryName(movie.getCategory().getCategoryName())
+                    .categoryNames(movie.getCategories().stream()
+                            .map(Category::getCategoryName)
+                            .collect(Collectors.toList()))
                     .releaseDate(movie.getReleaseDate().format(formatter))
-                    .movieStatus(movie.getStatusMovie().getDescription())
                     .build();
-            movieResponses.add(movieResponse);
-        }
-        return new PageImpl<>(movieResponses, pageable, movieResponses.size());
+        });
+        return movies;
     }
 
     //Thêm mới
@@ -87,16 +72,23 @@ public class MovieServiceImpl implements MovieService {
         movie.setDescription(movieDTO.getDescription());
         movie.setLanguage(movieDTO.getLanguage());
         movie.setPoster(movieDTO.getPoster());
-        movie.setTrailer(movieDTO.getTrailer());
-        movie.setStatusMovie(StatusMovie.COMING_SOON);
 
-        Long categoryId = movieDTO.getCategoryId();
-        if (categoryId != null) {
-            Category category = categoryRepository.findById(categoryId).orElse(null);
-            if( category == null) {
-                throw new ResourceNotFoundException("Danh mục không tồn tại.");
+        // Lấy danh sách các ID thể loại từ MovieDTO
+        Set<Long> categoryIds = movieDTO.getCategoryIds();
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            Set<Category> categories = new HashSet<>();
+
+            for (Long categoryId : categoryIds) {
+                Category category = categoryRepository.findById(categoryId).orElse(null);
+
+                if (category == null) {
+                    throw new ResourceNotFoundException("Danh mục không tồn tại.");
+                }
+
+                categories.add(category); // Thêm thể loại vào Set
             }
-            movie.setCategory(category);
+
+            movie.setCategories(categories); // Cập nhật bộ sưu tập thể loại cho phim
         }
 
         // Lưu đối tượng movie vào cơ sở dữ liệu
@@ -113,15 +105,14 @@ public class MovieServiceImpl implements MovieService {
                 .director(movie.getDirector())
                 .cast(movie.getCast())
                 .poster(movie.getPoster())
-                .trailer(movie.getTrailer())
                 .language(movie.getLanguage())
                 .description(movie.getDescription())
-                .categoryName(movie.getCategory().getCategoryName())
-                .movieStatus(movie.getStatusMovie().getDescription())
+                .categoryNames(movie.getCategories().stream()
+                        .map(Category::getCategoryName)
+                        .collect(Collectors.toList()))
                 .releaseDate(movie.getReleaseDate().format(formatter))
                 .build();
     }
-
 
     @Override
     public Movie findById(Long id) throws NoResourceFoundException {
@@ -135,22 +126,6 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieResponse update(MovieUpdateDTO movieUpdateDTO, Long id) throws CustomException {
         Movie movie = findById(id);
-
-        // Kiểm tra trạng thái và ngày phát hành khi là "COMING_SOON" hoặc trạng thái khác
-        if (movieUpdateDTO.getStatusMovie() != null) {
-            if (movieUpdateDTO.getStatusMovie().equalsIgnoreCase("COMING_SOON")) {
-                // Ngày phát hành phải lớn hơn ngày hiện tại khi trạng thái là "COMING_SOON"
-                if (movieUpdateDTO.getReleaseDate().isBefore(LocalDate.now())) {
-                    throw new CustomException("Ngày phát hành phải lớn hơn ngày hiện tại khi trạng thái là 'COMING_SOON'");
-                }
-            } else {
-                // Đối với các trạng thái khác (đang chiếu, ngừng chiếu), ngày phát hành phải nhỏ hơn ngày hiện tại
-                if (movieUpdateDTO.getReleaseDate().isAfter(LocalDate.now())) {
-                    throw new CustomException("Ngày phát hành phải nhỏ hơn ngày hiện tại khi trạng thái không phải là 'COMING_SOON'");
-                }
-            }
-        }
-
         movie.setId(id);
         // Kiểm tra trùng tên phim trước khi tiếp tục
         boolean check = movieRepository.existsByMovieNameAndId(movieUpdateDTO.getMovieName(), id);
@@ -165,34 +140,25 @@ public class MovieServiceImpl implements MovieService {
         movie.setCast(movieUpdateDTO.getCast());
         movie.setDescription(movieUpdateDTO.getDescription());
         movie.setLanguage(movieUpdateDTO.getLanguage());
-
-        // Kiểm tra lại ngày phát hành sau khi đã xét trạng thái
-        if (movieUpdateDTO.getReleaseDate() != null) {
-            movie.setReleaseDate(movieUpdateDTO.getReleaseDate());
-        }
-
+        movie.setReleaseDate(movieUpdateDTO.getReleaseDate());
         movie.setPoster(movieUpdateDTO.getPoster());
-        movie.setTrailer(movieUpdateDTO.getTrailer());
 
-        // Cập nhật danh mục phim
-        Long categoryId = movieUpdateDTO.getCategoryId();
-        if (categoryId != null) {
-            Category category = categoryRepository.findById(categoryId).orElse(null);
-            if (category == null) {
-                throw new ResourceNotFoundException("Danh mục không tồn tại.");
-            }
-            movie.setCategory(category);
-        }
+        // Lấy danh sách các ID thể loại từ MovieDTO
+        Set<Long> categoryIds = movieUpdateDTO.getCategoryIds();
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            Set<Category> categories = new HashSet<>();
 
-        // Cập nhật trạng thái của phim
-        if (movieUpdateDTO.getStatusMovie() != null) {
-            try {
-                // Chuyển đổi từ String sang StatusMovie enum
-                StatusMovie newStatus = StatusMovie.valueOf(movieUpdateDTO.getStatusMovie().toUpperCase());
-                movie.setStatusMovie(newStatus);
-            } catch (IllegalArgumentException e) {
-                throw new IllegalArgumentException("Trạng thái không hợp lệ");
+            for (Long categoryId : categoryIds) {
+                Category category = categoryRepository.findById(categoryId).orElse(null);
+
+                if (category == null) {
+                    throw new ResourceNotFoundException("Danh mục không tồn tại.");
+                }
+
+                categories.add(category); // Thêm thể loại vào Set
             }
+
+            movie.setCategories(categories); // Cập nhật bộ sưu tập thể loại cho phim
         }
 
         // Lưu lại thông tin phim đã cập nhật
@@ -208,11 +174,11 @@ public class MovieServiceImpl implements MovieService {
                 .director(movie.getDirector())
                 .cast(movie.getCast())
                 .poster(movie.getPoster())
-                .trailer(movie.getTrailer())
                 .language(movie.getLanguage())
                 .description(movie.getDescription())
-                .categoryName(movie.getCategory().getCategoryName())
-                .movieStatus(movie.getStatusMovie().getDescription())
+                .categoryNames(movie.getCategories().stream()
+                        .map(Category::getCategoryName)
+                        .collect(Collectors.toList()))
                 .releaseDate(movie.getReleaseDate().format(formatter))
                 .build();
     }
@@ -237,12 +203,12 @@ public class MovieServiceImpl implements MovieService {
                     .director(movie.getDirector())
                     .cast(movie.getCast())
                     .poster(movie.getPoster())
-                    .trailer(movie.getTrailer())
                     .language(movie.getLanguage())
                     .description(movie.getDescription())
-                    .categoryName(movie.getCategory().getCategoryName())
+                    .categoryNames(movie.getCategories().stream()
+                            .map(Category::getCategoryName)
+                            .collect(Collectors.toList()))
                     .releaseDate(movie.getReleaseDate().format(formatter))
-                    .movieStatus(movie.getStatusMovie().getDescription())
                     .build();
             movieResponses.add(movieResponse);
         }

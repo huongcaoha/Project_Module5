@@ -20,7 +20,6 @@ public class Comment {
     private Long id;
 
     private String comment;
-    private int rating;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -22,16 +23,16 @@ public class Movie {
     private LocalDate releaseDate; //Ngày phát hành
     private String director; //Đạo diễn
     private String cast; //Diễn viên chính
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
     private String language;
     private String poster;
-    private String trailer;
 
     @ManyToMany
     @JoinTable(
-            name = "movie_"
+            name = "movie_category",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-
-    @Enumerated(EnumType.STRING)
-    private StatusMovie statusMovie;
+    private Set<Category> categories;
 }
