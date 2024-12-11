@@ -25,6 +25,11 @@ public class SeatServiceImpl implements SeatService{
     private ScreenRoomRepository screenRoomRepository;
 
     @Override
+    public List<Seat> getSeatByScreenId(long id) {
+        return seatRepository.getSeatByScreenRoomId(id);
+    }
+
+    @Override
     public SeatPagination findAllAndSearch(Pageable pageable, String search) {
         Page<Seat> page = null ;
        if(search != null){

@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface SeatRepository extends JpaRepository<Seat,Long> {
     @Query("select s from Seat s where s.seatName like %:search%")
     Page<Seat> findAllAndSearch(Pageable pageable , @Param("search") String search);
@@ -20,4 +22,7 @@ public interface SeatRepository extends JpaRepository<Seat,Long> {
     @Transactional // Đảm bảo rằng phương thức này được gọi trong một giao dịch
     @Query("DELETE FROM Seat s WHERE s.screenRoom.id = :screenRoomId")
     void deleteSeatByScreenRoomId(@Param("screenRoomId") long screenRoomId);
+
+    @Query("select s from Seat s where s.screenRoom.id = :screenRoomId")
+    List<Seat> getSeatByScreenRoomId(@Param("screenRoomId") long screenRoomId);
 }
