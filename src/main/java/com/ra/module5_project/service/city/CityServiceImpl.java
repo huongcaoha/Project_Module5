@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 
@@ -17,6 +18,11 @@ import java.util.NoSuchElementException;
 public class CityServiceImpl implements CityService{
     @Autowired
     private CityRepository cityRepository ;
+
+    @Override
+    public List<City> getAll() {
+        return cityRepository.findAll();
+    }
 
     @Override
     public CityPagination findAll(Pageable pageable, String search) {

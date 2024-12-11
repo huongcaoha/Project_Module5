@@ -25,6 +25,5 @@ public class TheaterRequest {
 
     @NotNull(message = "Number screen can not null")
     @Min(1)
-    @Max(100)
     private int numberOfScreens ;
 }

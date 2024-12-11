@@ -15,15 +15,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api.myService.com/v1/admin/city")
 public class AdminCityController {
     @Autowired
     private CityService cityService;
+//    @GetMapping
+//    public ResponseEntity<CityPagination> findAllAndSearchName(@PageableDefault(page = 0 , size = 5 , sort = "id" , direction = Sort.Direction.ASC) Pageable pageable ,
+//                                                               @RequestParam(required = false) String search){
+//        return new ResponseEntity<>(cityService.findAll(pageable,search), HttpStatus.OK);
+//    }
     @GetMapping
-    public ResponseEntity<CityPagination> findAllAndSearchName(@PageableDefault(page = 0 , size = 5 , sort = "id" , direction = Sort.Direction.ASC) Pageable pageable ,
-                                                               @RequestParam(required = false) String search){
-        return new ResponseEntity<>(cityService.findAll(pageable,search), HttpStatus.OK);
+    public ResponseEntity<List<City>> getAll() {
+        return new ResponseEntity<>(cityService.getAll(),HttpStatus.OK);
     }
 
     @PostMapping
