@@ -53,6 +53,12 @@ public class AdminSeatController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<?> updateListSeat(@RequestBody List<Seat> seats){
+        seatService.updateListSeat(seats);
+        return new ResponseEntity<>("Update success44",HttpStatus.OK);
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteById(@PathVariable long id){
         seatService.deleteById(id);

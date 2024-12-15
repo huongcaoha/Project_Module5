@@ -1,24 +1,12 @@
 package com.ra.module5_project.model.dto.booking.request;
 
-import com.ra.module5_project.model.entity.ShowTime;
-import com.ra.module5_project.model.entity.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
 
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Builder
-
-public class BookingRequest {
+public class BookingRequestUpdate {
     @NotNull(message = "Show time id can not null")
     @Min(1)
     private long showTimeId ;
@@ -28,5 +16,4 @@ public class BookingRequest {
     private List<Long> listSeatId ;
 
     private double totalPriceFood ;
-
 }

@@ -3,6 +3,7 @@ package com.ra.module5_project.controller.admin;
 import com.ra.module5_project.model.dto.screenRoom.request.ScreenRoomRequest;
 import com.ra.module5_project.model.dto.screenRoom.response.ScreenRoomPagination;
 import com.ra.module5_project.model.dto.screenRoom.response.ScreenRoomResponse;
+import com.ra.module5_project.model.entity.ScreenRoom;
 import com.ra.module5_project.service.screenRoom.ScreenRoomService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api.myService.com/v1/admin/screenRooms")
@@ -56,4 +59,14 @@ public class AdminScreenRoomController {
     public ResponseEntity<ScreenRoomResponse> findById(@PathVariable long id){
         return new ResponseEntity<>(screenRoomService.findById(id),HttpStatus.OK);
     }
+
+    @GetMapping("/getScreenByTheater/{id}")
+    public ResponseEntity<List<ScreenRoom>> getScreenByTheater(@PathVariable long id){
+        return new ResponseEntity<>(screenRoomService.getScreenByTheater(id),HttpStatus.OK);
+    }
+    @GetMapping("/getAll")
+    public ResponseEntity<List<ScreenRoom>> getAll(){
+        return  new ResponseEntity<>(screenRoomService.getAll(),HttpStatus.OK);
+    }
+
 }

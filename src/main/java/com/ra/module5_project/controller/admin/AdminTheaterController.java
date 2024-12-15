@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api.myService.com/v1/admin/theaters")
 public class AdminTheaterController {
@@ -23,6 +25,11 @@ public class AdminTheaterController {
     public ResponseEntity<TheaterPagination> findAllAndSearchName(@PageableDefault(page = 0 , size = 5 ,sort = "id",direction = Sort.Direction.ASC)Pageable pageable,
                                                                   @RequestParam(required = false) String search){
         return new ResponseEntity<>(theaterService.findAllAndSearch(pageable, search), HttpStatus.OK);
+    }
+
+    @GetMapping("/getTheaters")
+    public ResponseEntity<List<Theater>> getTheaters() {
+        return  new ResponseEntity<>(theaterService.getTheaters(),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

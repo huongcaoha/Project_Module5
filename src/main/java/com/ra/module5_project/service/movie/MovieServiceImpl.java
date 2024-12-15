@@ -214,4 +214,16 @@ public class MovieServiceImpl implements MovieService {
         }
         return new PageImpl<>(movieResponses, pageable, movieResponses.size());
     }
+
+    @Override
+    public List<Movie> getMovieByMonth() {
+        LocalDate currentDate = LocalDate.now();
+        List<Movie> movies = movieRepository.getMovieByMonth(currentDate);
+       return movies.stream().filter((movie) -> {
+            LocalDate endDate = movie.getReleaseDate().plusDays(30);
+            return !movie.getReleaseDate().isAfter(endDate) ;
+        }).toList();
+
+
+    }
 }

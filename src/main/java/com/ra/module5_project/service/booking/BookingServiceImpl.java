@@ -2,6 +2,7 @@ package com.ra.module5_project.service.booking;
 
 import com.ra.module5_project.model.constant.TypeSeat;
 import com.ra.module5_project.model.dto.booking.request.BookingRequest;
+import com.ra.module5_project.model.dto.booking.request.BookingSearch;
 import com.ra.module5_project.model.dto.booking.response.BookingPagination;
 import com.ra.module5_project.model.entity.*;
 import com.ra.module5_project.repository.BookingRepository;
@@ -40,8 +41,14 @@ public class BookingServiceImpl implements BookingService{
     @Autowired
     private BookingSeatRepository bookingSeatRepository ;
     @Override
-    public BookingPagination findAll(Pageable pageable) {
-        Page<Booking> page = bookingRepository.findAll(pageable);
+    public BookingPagination findAll(Pageable pageable , BookingSearch search) {
+        Page<Booking> page ;
+        if(search != null){
+            page = bookingRepository.findAllAndSearch(pageable, search.getMovieId(), search.getTheaterId(), search.getScreenRoomId(), search.getShowTimeId());
+        }
+        else {
+            page = bookingRepository.findAll(pageable);
+        }
         return BookingPagination.builder()
                 .bookings(page.getContent())
                 .currentPage(page.getNumber())

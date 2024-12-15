@@ -24,5 +24,5 @@ public class Seat {
     private String seatName ;
 
     private TypeSeat typeSeat ;
-    private int status = 1 ;
+    private boolean status = true ;
 }

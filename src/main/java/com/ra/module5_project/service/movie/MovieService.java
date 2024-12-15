@@ -8,6 +8,8 @@ import com.ra.module5_project.model.entity.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface MovieService {
     Page<MovieResponse> findAll(Pageable pageable);
     MovieResponse create(MovieDTO movieDTO) throws CustomException;
@@ -15,4 +17,5 @@ public interface MovieService {
     MovieResponse update(MovieUpdateDTO movieUpdateDTO, Long id) throws CustomException;
     void delete(Long id);
     Page<MovieResponse> search(String keyword, Pageable pageable);
+    List<Movie> getMovieByMonth();
 }

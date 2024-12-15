@@ -33,8 +33,10 @@ public class Booking {
     @Column(name = "totalPriceMovie" , nullable = false)
     private  double totalPriceMovie ;
 
-    private double totalPriceFood ;
+    @Column(name = "totalPriceFood" )
+    private Double totalPriceFood ; // tổng tiền đò ăn
 
     private boolean status =true ;
     private LocalDateTime created_at = LocalDateTime.now();
+
 }

@@ -29,7 +29,7 @@ public class BookingSeat {
     @Column(name = "quantity" , nullable = false)
     private int quantity ;
 
-    @Column(name = "price" , nullable = false)
+    @Column(name = "price" , nullable = false) // giá vé tính ở thời điểm hiện tại
     private double price ;
 
     private LocalDateTime created_date ;

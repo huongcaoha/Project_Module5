@@ -26,7 +26,6 @@ public class ShowTimeRequestUpdate {
     private long screenRoomId ;
 
     @NotBlank(message = "Show time can not blank")
-    @CheckDateFutureOrPresent(entityClass = ShowTime.class , fieldName = "showTime")
     private String showTime ;
 
     @NotBlank(message = "Type movie can not blank")

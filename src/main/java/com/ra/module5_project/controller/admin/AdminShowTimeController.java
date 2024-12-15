@@ -1,6 +1,7 @@
 package com.ra.module5_project.controller.admin;
 
 import com.ra.module5_project.model.dto.showTime.request.ShowTimeRequest;
+import com.ra.module5_project.model.dto.showTime.request.ShowTimeRequestMovieAndDate;
 import com.ra.module5_project.model.dto.showTime.request.ShowTimeRequestUpdate;
 import com.ra.module5_project.model.dto.showTime.response.ShowTimePagination;
 import com.ra.module5_project.model.entity.ShowTime;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api.myService.com/v1/admin/showTimes")
@@ -23,8 +25,12 @@ public class AdminShowTimeController {
     private ShowTimeService showTimeService ;
     @GetMapping
     public ResponseEntity<ShowTimePagination> findAllAndSearch(@PageableDefault(page = 0 , size = 5 , sort = "id",direction = Sort.Direction.ASC)Pageable pageable,
-                                                               @RequestParam(required = false)LocalDate showDate){
-        return new ResponseEntity<>(showTimeService.findAllAndSearch(pageable, showDate), HttpStatus.OK);
+                                                               @RequestParam(required = false)Long showTimeId,
+                                                               @RequestParam(required = false) Long theaterId,
+                                                               @RequestParam(required = false) Long movieId,
+                                                               @RequestParam(required = false) Long screenRoomId
+                                                               ){
+        return new ResponseEntity<>(showTimeService.findAllAndSearch(pageable ,movieId ,theaterId,screenRoomId,showTimeId), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -57,5 +63,18 @@ public class AdminShowTimeController {
     public ResponseEntity<String> deleteById(@PathVariable long id){
         showTimeService.deleteById(id);
         return new ResponseEntity<>("Delete show time successfully",HttpStatus.OK);
+    }
+
+    @GetMapping("/getShowTimeByScreenRoom/{id}")
+    public ResponseEntity<List<ShowTime>> getListByScreenRoomId(@PathVariable long id){
+        return new ResponseEntity<>(showTimeService.getShowTimeByScreenRoom(id),HttpStatus.OK);
+    }
+
+    @GetMapping("/getShowTimeByMovieAndDate")
+    public ResponseEntity<List<ShowTime>> getShowTimeByMovieAndDate(
+            @RequestParam Long movieId,
+            @RequestParam LocalDate date) {
+
+        return new ResponseEntity<>(showTimeService.getShowTimeByMovieAndDate(movieId, date), HttpStatus.OK);
     }
 }

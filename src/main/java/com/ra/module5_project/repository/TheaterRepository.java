@@ -7,10 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface TheaterRepository extends JpaRepository<Theater,Long> {
     @Query("select t from Theater t where t.name like %:search%")
     Page<Theater> findAllAndSearchName(Pageable pageable , @Param("search") String search);
 
     @Query("select count(t) > 0 from Theater  t where t.name = :theaterName")
     boolean checkTheaterNameExist(@Param("theaterName") String theaterName);
+
+
 }

@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api.myService.com/v1/admin/movies")
 public class MovieController {
@@ -31,6 +33,11 @@ public class MovieController {
             movies = movieService.search(search, pageable);
         }
         return ResponseEntity.ok(movies);
+    }
+
+    @GetMapping("/getMovieByMonth")
+    public ResponseEntity<List<Movie>> getMovieByMonth(){
+        return new ResponseEntity<>(movieService.getMovieByMonth(),HttpStatus.OK);
     }
 
     @PostMapping("/add")

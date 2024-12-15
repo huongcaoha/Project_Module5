@@ -17,4 +17,5 @@ public interface SeatService {
     SeatResponse findById(long id);
     void autoCreateSeat(long screenRoomId,int numberSeat);
     void autoDeleteSeat(long screenRoomId);
+    void updateListSeat(List<Seat> seats) ;
 }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -74,6 +75,11 @@ public class TheaterServiceImpl implements TheaterService{
     @Override
     public boolean checkNameExist(String name) {
         return theaterRepository.checkTheaterNameExist(name);
+    }
+
+    @Override
+    public List<Theater> getTheaters() {
+        return theaterRepository.findAll();
     }
 
     Theater convertToTheater(TheaterRequest theaterRequest){
