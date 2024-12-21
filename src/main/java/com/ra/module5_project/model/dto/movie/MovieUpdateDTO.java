@@ -37,8 +37,6 @@ public class MovieUpdateDTO {
 
     @NotBlank(message = "Ngôn ngữ không được để trống")
     private String language;
-
-    @NotBlank(message = "Poster không được để trống")
     private String poster;
 
     @NotNull(message = "Danh sách thể loại không được để trống")

@@ -1,8 +1,8 @@
 package com.ra.module5_project.controller.admin;
 
+import com.ra.module5_project.exception.BadRequestException;
 import com.ra.module5_project.exception.CustomException;
 import com.ra.module5_project.model.dto.movie.MovieDTO;
-import com.ra.module5_project.model.dto.movie.MovieResponse;
 import com.ra.module5_project.model.dto.movie.MovieUpdateDTO;
 import com.ra.module5_project.model.entity.Movie;
 import com.ra.module5_project.service.movie.MovieService;
@@ -26,7 +26,7 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<?> findAllMovies(@RequestParam(defaultValue = "") String search, @PageableDefault(page = 0, size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        Page<MovieResponse> movies;
+        Page<Movie> movies;
         if (search == null || search.isEmpty()) {
             movies = movieService.findAll(pageable);
         } else {
@@ -42,8 +42,8 @@ public class MovieController {
 
     @PostMapping("/add")
     public ResponseEntity<?> add(@Valid @RequestBody MovieDTO movieDTO) throws CustomException {
-        MovieResponse movieResponse = movieService.create(movieDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(movieResponse);
+        Movie movie = movieService.create(movieDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(movie);
     }
 
     @GetMapping("/{id}")
@@ -53,9 +53,9 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody MovieUpdateDTO movieUpdateDTO) throws CustomException {
-        MovieResponse movieResponse = movieService.update(movieUpdateDTO, id);
-        return ResponseEntity.ok(movieResponse);
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody MovieUpdateDTO movieUpdateDTO) throws BadRequestException {
+        Movie movie = movieService.update(movieUpdateDTO, id);
+        return ResponseEntity.ok(movie);
     }
 
     @DeleteMapping("/{id}")

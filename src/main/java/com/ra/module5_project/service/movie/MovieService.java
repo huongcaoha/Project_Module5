@@ -1,21 +1,28 @@
 package com.ra.module5_project.service.movie;
 
+import com.ra.module5_project.exception.BadRequestException;
 import com.ra.module5_project.exception.CustomException;
 import com.ra.module5_project.model.dto.movie.MovieDTO;
-import com.ra.module5_project.model.dto.movie.MovieResponse;
 import com.ra.module5_project.model.dto.movie.MovieUpdateDTO;
 import com.ra.module5_project.model.entity.Movie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MovieService {
-    Page<MovieResponse> findAll(Pageable pageable);
-    MovieResponse create(MovieDTO movieDTO) throws CustomException;
+    Page<Movie> findAll(Pageable pageable);
+    Movie create(MovieDTO movieDTO) throws CustomException;
     Movie findById(Long id);
-    MovieResponse update(MovieUpdateDTO movieUpdateDTO, Long id) throws CustomException;
+    Movie update(MovieUpdateDTO movieUpdateDTO, Long id) throws BadRequestException;
     void delete(Long id);
-    Page<MovieResponse> search(String keyword, Pageable pageable);
+    Page<Movie> search(String keyword, Pageable pageable);
+
+    // Show all user
+    List<Movie> findAllMoviesLast7Days();
+    List<Movie> findAllMoviesInFuture();
+
+    List<Movie> findAllMoviesNews();
     List<Movie> getMovieByMonth();
 }

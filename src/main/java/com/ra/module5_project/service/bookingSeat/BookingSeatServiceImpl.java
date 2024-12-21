@@ -1,7 +1,9 @@
 package com.ra.module5_project.service.bookingSeat;
 
+import com.ra.module5_project.model.dto.bookingSeat.request.BookingSeatRequest;
 import com.ra.module5_project.model.dto.bookingSeat.response.BookingSeatPagination;
 import com.ra.module5_project.model.entity.BookingSeat;
+import com.ra.module5_project.model.entity.Seat;
 import com.ra.module5_project.repository.BookingSeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +31,19 @@ public class BookingSeatServiceImpl implements BookingSeatService{
     }
 
     @Override
+    public List<Seat> getListSeatSold(long showTimeId) {
+        return bookingSeatRepository.getBookingSeatsByShowTime(showTimeId).stream().map(BookingSeat::getSeat).toList();
+    }
+
+    @Override
     public void deleteByBookingId(long bookingId) {
         bookingSeatRepository.deleteByBookingId(bookingId);
     }
+
+    @Override
+    public List<BookingSeat> getBookingSeatByBookingId(long bookingId) {
+        return bookingSeatRepository.getBookingSeatByBookingId(bookingId);
+    }
+
+
 }

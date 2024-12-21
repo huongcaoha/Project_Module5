@@ -4,8 +4,10 @@ import com.ra.module5_project.model.constant.StatusTicket;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -18,6 +20,9 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id ;
+    
+    @Builder.Default
+    private String serial_number = UUID.randomUUID().toString();
 
     @ManyToOne
     @JoinColumn(name = "showTimeId",referencedColumnName = "id") // lịch chiếu
@@ -37,6 +42,11 @@ public class Booking {
     private Double totalPriceFood ; // tổng tiền đò ăn
 
     private boolean status =true ;
-    private LocalDateTime created_at = LocalDateTime.now();
 
+    @Builder.Default
+    private LocalDate created_at = LocalDate.now();
+
+    @OneToOne
+    @JoinColumn(name = "giftId" ,referencedColumnName = "id")
+    private Gift gift ;
 }

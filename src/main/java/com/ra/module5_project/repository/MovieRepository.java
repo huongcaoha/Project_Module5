@@ -17,6 +17,21 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query("select count (m.id) > 0 from Movie m where m.movieName like :movieName and m.id != :id")
     boolean existsByMovieNameAndId(@Param("movieName") String movieName, @Param("id") Long id);
 
-    @Query("select m from Movie m where m.releaseDate < :currentDate ")
+    //PermitAll and User
+    //Phim đang chieu
+    @Query("SELECT m FROM Movie m WHERE m.releaseDate >= :startDate AND m.releaseDate <= :endDate")
+    List<Movie> findMoviesFromLast7Days(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    // fix conflict
+    //phim sap chieu
+    @Query("SELECT m FROM Movie m WHERE m.releaseDate > :currentDate")
+    List<Movie> findMoviesInFuture(@Param("currentDate") LocalDate currentDate);
+
+    //phim moi nhat
+    @Query("select m from Movie m where m.releaseDate =:currentDate")
+    List<Movie> findMoviesNew(@Param("currentDate") LocalDate currentDate);
+
+    @Query("select m from Movie m  ")
     List<Movie> getMovieByMonth(@Param("currentDate")LocalDate currentDate);
+
 }

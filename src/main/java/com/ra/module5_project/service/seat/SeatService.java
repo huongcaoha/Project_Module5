@@ -13,9 +13,9 @@ public interface SeatService {
     SeatPagination findAllAndSearch(Pageable pageable , String search);
     SeatResponse save(SeatRequest seatRequest);
     SeatResponse update(long id ,SeatRequest seatRequest);
+    boolean updateAll(List<Seat> seats);
     void deleteById(long id);
     SeatResponse findById(long id);
     void autoCreateSeat(long screenRoomId,int numberSeat);
     void autoDeleteSeat(long screenRoomId);
-    void updateListSeat(List<Seat> seats) ;
 }

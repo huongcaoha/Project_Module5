@@ -80,7 +80,7 @@ public class ScreenRoomServiceImpl implements ScreenRoomService{
                 Seat seat = Seat.builder()
                         .screenRoom(screenRoomRepository.findById(idRoom).orElseThrow(() -> new NoSuchElementException("Not found screen room")))
                         .seatName(nameRowSeats.get(i) + j)
-                        .status(true)
+                        .status(1)
                         .typeSeat(TypeSeat.STANDARD)
                         .build();
                 seatRepository.save(seat);
@@ -93,7 +93,7 @@ public class ScreenRoomServiceImpl implements ScreenRoomService{
                Seat seat = Seat.builder()
                        .screenRoom(screenRoomRepository.findById(idRoom).orElseThrow(() -> new NoSuchElementException("Not found screen room")))
                        .seatName(nameRowSeats.get(row) + i)
-                       .status(true)
+                       .status(1)
                        .typeSeat(TypeSeat.DOUBLE)
                        .build();
                seatRepository.save(seat);

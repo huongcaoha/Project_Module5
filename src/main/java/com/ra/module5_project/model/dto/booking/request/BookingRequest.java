@@ -1,5 +1,6 @@
 package com.ra.module5_project.model.dto.booking.request;
 
+import com.ra.module5_project.model.dto.foodBooking.request.FoodBookingRequest;
 import com.ra.module5_project.model.entity.ShowTime;
 import com.ra.module5_project.model.entity.User;
 import jakarta.persistence.Column;
@@ -29,4 +30,7 @@ public class BookingRequest {
 
     private double totalPriceFood ;
 
+    private List<FoodBookingRequest> foodBookingRequests;
+
+    private long giftId ;
 }

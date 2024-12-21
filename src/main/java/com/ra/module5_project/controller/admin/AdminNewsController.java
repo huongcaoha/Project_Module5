@@ -50,4 +50,10 @@ public class AdminNewsController {
         News news = newsService.update(newsUpdateDTO, id);
         return ResponseEntity.ok(news);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        newsService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
