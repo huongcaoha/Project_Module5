@@ -10,12 +10,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ShowTimeService {
-    ShowTimePagination findAllAndSearch(Pageable pageable ,Long movieId ,Long theaterId , Long screenRoomId  , Long showTimeId );
+    ShowTimePagination findAllAndSearch(Pageable pageable,Long movieId ,Long theaterId , Long screenRoomId , Long showTimeId );
     ShowTime save(ShowTimeRequest showTimeRequest);
     ShowTime update(long idShowTime , ShowTimeRequestUpdate showTimeRequestUpdate);
     ShowTime findById(long id);
     void deleteById(long id);
     ShowTime convertDTOToShowTime(ShowTimeRequest showTimeRequest);
+    List<ShowTime> getShowTimeByMovieAndDate(long movieId, LocalDate date,String theaterName);
     List<ShowTime> getShowTimeByScreenRoom(long screenRoomId);
-    List<ShowTime> getShowTimeByMovieAndDate(long movieId,LocalDate date);
 }

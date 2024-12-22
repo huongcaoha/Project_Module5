@@ -53,15 +53,15 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> {
 //                    auth.requestMatchers("/api.myService.com/v1/admin/**").hasAuthority("ADMIN");
-                    auth.requestMatchers("/api.myService.com/v1/users/**").hasAuthority("USER");
+//                    auth.requestMatchers("/api.myService.com/v1/users/**").hasAuthority("USER");
                     auth.anyRequest().permitAll();
                 }).sessionManagement(auth -> auth.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(auth -> auth.authenticationEntryPoint(jwtEntrypoint))
                 .addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(auth -> auth.logoutUrl("/api/v1/logout")
-                        .addLogoutHandler(myLogout)
-                        .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()))
-                )
+//                .logout(auth -> auth.logoutUrl("/api/v1/logout")
+//                        .addLogoutHandler(myLogout)
+//                        .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext()))
+//                )
                 .build();
     }
     @Bean

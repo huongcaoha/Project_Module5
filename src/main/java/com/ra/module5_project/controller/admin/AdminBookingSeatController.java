@@ -1,6 +1,7 @@
 package com.ra.module5_project.controller.admin;
 
 import com.ra.module5_project.model.entity.BookingSeat;
+import com.ra.module5_project.model.entity.Seat;
 import com.ra.module5_project.security.principle.UserPrinciple;
 import com.ra.module5_project.service.bookingSeat.BookingSeatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,4 +25,13 @@ public class AdminBookingSeatController {
         return new ResponseEntity<>(bookingSeatService.findAllByBookingId(bookingId), HttpStatus.OK);
     }
 
+    @GetMapping("/getBookingSeatByShowTime/{showTimeId}")
+    public ResponseEntity<List<Seat>> getSeatByShowTime(@PathVariable long showTimeId){
+        return  new ResponseEntity<>(bookingSeatService.getListSeatSold(showTimeId),HttpStatus.OK);
+    }
+
+    @GetMapping("/getBookingSeatByBookingId/{id}")
+    public ResponseEntity<List<BookingSeat>> getBookingSeatByBookingId(@PathVariable long id){
+        return new ResponseEntity<>(bookingSeatService.getBookingSeatByBookingId(id),HttpStatus.OK);
+    }
 }

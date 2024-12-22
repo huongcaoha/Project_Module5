@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 public class ShowTimeServiceImpl implements ShowTimeService{
@@ -32,36 +32,17 @@ public class ShowTimeServiceImpl implements ShowTimeService{
     @Autowired
     private ScreenRoomRepository screenRoomRepository ;
     @Override
-    public ShowTimePagination findAllAndSearch(Pageable pageable ,Long movieId ,Long theaterId , Long screenRoomId  , Long showTimeId ) {
-//        Page<ShowTime> page = null ;
-//        if(showTimeId != null && theaterId != null && movieId != null && screenRoomId != null ){
-//            page = showTimeRepository.findAllAndSearchDate(pageable,showTimeId,theaterId,movieId,screenRoomId);
-//        }else {
-//            page = showTimeRepository.findAll(pageable);
-//        }
-        LocalDateTime date = LocalDateTime.now() ;
-        List<ShowTime> showTimes = showTimeRepository.findAllNew(date);
-            if(movieId != null){
-                showTimes.stream().filter(showTime -> Objects.equals(showTime.getMovie().getId(), movieId)).toList();
-            }
+    public ShowTimePagination findAllAndSearch(Pageable pageable,Long movieId ,Long theaterId , Long screenRoomId , Long showTimeId ) {
+        LocalDate localDate = LocalDate.now();
+        Page<ShowTime> page =  screenRoomRepository.findAllAndSearchAndPagination(pageable,movieId,theaterId,screenRoomId,localDate);
 
-        if(theaterId != null){
-            showTimes.stream().filter(showTime -> Objects.equals(showTime.getTheater().getId(), theaterId)).toList();
-        }
 
-        if(screenRoomId != null){
-            showTimes.stream().filter(showTime -> Objects.equals(showTime.getScreenRoom().getId(), screenRoomId)).toList();
-        }
-
-        if(showTimeId != null){
-            showTimes.stream().filter(showTime -> Objects.equals(showTime.getId(), showTimeId)).toList();
-        }
         return ShowTimePagination.builder()
-                .showTimes(showTimes)
-                .currentPage(1)
-                .size(showTimes.size())
-                .totalElement(showTimes.size())
-                .totalPage(showTimes.size() / 5)
+                .showTimes(page.getContent())
+                .currentPage(page.getNumber())
+                .size(page.getSize())
+                .totalElement(page.getTotalElements())
+                .totalPage(page.getTotalPages())
                 .build();
     }
 
@@ -94,7 +75,7 @@ public class ShowTimeServiceImpl implements ShowTimeService{
         boolean checkShowTimeExist = showTimeRepository.checkShowTimeExist(showDate,showTimeRequestUpdate.getTheaterId(),showTimeRequestUpdate.getScreenRoomId());
         LocalDateTime oldTime = oldShowTime.getShowTime().withMinute(0).withSecond(0).withNano(0);
         LocalDateTime newTime = showDate.withMinute(0).withSecond(0).withNano(0);
-        if(checkShowTimeExist && oldTime == newTime){
+        if(checkShowTimeExist && oldTime.equals( newTime)){
             checkShowTimeExist = false ;
         }
         if(checkShowTimeExist){
@@ -158,12 +139,13 @@ public class ShowTimeServiceImpl implements ShowTimeService{
     }
 
     @Override
-    public List<ShowTime> getShowTimeByScreenRoom(long screenRoomId) {
-        return showTimeRepository.getShowTimesByScreenRoomId(screenRoomId);
+    public List<ShowTime> getShowTimeByMovieAndDate(long movieId, LocalDate date,String theaterName) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        return showTimeRepository.getShowTimeByMovieAndDate(movieId,date,theaterName).stream().filter(showTime -> !showTime.getShowTime().isBefore(localDateTime)).toList();
     }
 
     @Override
-    public List<ShowTime> getShowTimeByMovieAndDate(long movieId, LocalDate date) {
-        return showTimeRepository.getShowTimeByMovieAndDate(movieId,date);
+    public List<ShowTime> getShowTimeByScreenRoom(long screenRoomId) {
+        return showTimeRepository.getShowTimesByScreenRoomId(screenRoomId);
     }
 }

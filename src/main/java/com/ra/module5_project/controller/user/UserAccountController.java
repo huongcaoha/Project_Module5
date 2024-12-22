@@ -51,4 +51,20 @@ public class UserAccountController {
            return new ResponseEntity<>("logout success",HttpStatus.OK);
     }
 
+    @GetMapping("/getUser")
+    public ResponseEntity<User> getUser(@AuthenticationPrincipal UserPrinciple userPrinciple){
+        return new ResponseEntity<>(userPrinciple.getUser(),HttpStatus.OK);
+    }
+
+    @PutMapping("/updateGetCoin")
+    public ResponseEntity<?> updateGetCoin(@AuthenticationPrincipal UserPrinciple userPrinciple){
+        return new ResponseEntity<>(userService.updateGetCoin(userPrinciple.getUser()),HttpStatus.OK);
+    }
+
+    @PutMapping("/useCoin")
+    public ResponseEntity<?> useCoin(@AuthenticationPrincipal UserPrinciple userPrinciple){
+        userService.useCoin(userPrinciple.getUser());
+        return new ResponseEntity<>("update coin successfully",HttpStatus.OK);
+    }
+
 }
