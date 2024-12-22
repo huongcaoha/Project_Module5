@@ -26,7 +26,7 @@ public class AuthController {
         this.authService = authService;
         this.jwtProvider = jwtProvider;
     }
-//Đk
+
     @PostMapping("/sign-up")
     public ResponseEntity<String> signUp(@Valid @RequestBody UserRegisterRequest userRegisterRequest){
            boolean rs = authService.register(userRegisterRequest);

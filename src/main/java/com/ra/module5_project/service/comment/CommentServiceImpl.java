@@ -3,7 +3,9 @@ package com.ra.module5_project.service.comment;
 import com.ra.module5_project.exception.CustomException;
 import com.ra.module5_project.exception.NoResourceFoundException;
 import com.ra.module5_project.model.dto.comment.CommentDTO;
+import com.ra.module5_project.model.dto.comment.CommentResponse;
 import com.ra.module5_project.model.dto.comment.ReplyComment;
+import com.ra.module5_project.model.dto.comment.ReplyCommentResponse;
 import com.ra.module5_project.model.entity.Comment;
 import com.ra.module5_project.model.entity.Movie;
 import com.ra.module5_project.repository.CommentRepository;
@@ -12,10 +14,13 @@ import com.ra.module5_project.repository.UserRepository;
 import com.ra.module5_project.security.principle.UserPrinciple;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,24 +33,42 @@ public class CommentServiceImpl implements CommentService {
     private UserRepository userRepository;
 
     @Override
-    public Page<Comment> findAllComments(Pageable pageable) {
+    public Page<CommentResponse> findAllComments(Pageable pageable) {
         Page<Comment> comments = commentRepository.findAll(pageable);
-        return comments;
+        List<CommentResponse> responses = new ArrayList<>();
+        for (Comment comment : comments) {
+            CommentResponse commentResponse = CommentResponse.builder()
+                    .userName(comment.getUser().getUsername())
+                    .comment(comment.getComment())
+                    .status(comment.isStatus())
+                    .build();
+            responses.add(commentResponse);
+        }
+        return new PageImpl<>(responses, pageable, comments.getTotalElements());
     }
 
     //Hiển thị các comment  trong phim(có status = true)
     @Override
-    public List<Comment> findAllByMovieId(Long movieId) throws NoResourceFoundException {
+    public List<CommentResponse> findAllByMovieId(Long movieId) throws NoResourceFoundException {
         Movie movie = movieRepository.findById(movieId).orElse(null);
         if(movie == null) {
             throw new NoResourceFoundException("Phim không tồn tại");
         }
         List<Comment> comments = commentRepository.findAllByMovieIdAndStatus(movieId,true);
-        return comments;
+        List<CommentResponse> responses = new ArrayList<>();
+        for (Comment comment : comments) {
+            CommentResponse commentResponse = CommentResponse.builder()
+                    .userName(comment.getUser().getUsername())
+                    .comment(comment.getComment())
+                    .status(comment.isStatus())
+                    .build();
+            responses.add(commentResponse);
+        }
+        return responses;
     }
 
     @Override
-    public Comment createByMovieId(CommentDTO commentDTO, Long movieId) throws CustomException {
+    public CommentResponse createByMovieId(CommentDTO commentDTO, Long movieId) throws CustomException {
         UserPrinciple userPrinciple = (UserPrinciple) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -67,11 +90,16 @@ public class CommentServiceImpl implements CommentService {
         newComment.setComment(commentDTO.getComment());
         newComment.setStatus(true);
         commentRepository.save(newComment);
-        return newComment;
+
+        return CommentResponse.builder()
+                .userName(userPrinciple.getUsername())
+                .comment(newComment.getComment())
+                .status(newComment.isStatus())
+                .build();
     }
 
     @Override
-    public Comment updateCommentByMovieId(CommentDTO commentDTO, Long movieId) throws CustomException {
+    public CommentResponse updateCommentByMovieId(CommentDTO commentDTO, Long movieId) throws CustomException {
         UserPrinciple userPrinciple = (UserPrinciple) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -89,8 +117,11 @@ public class CommentServiceImpl implements CommentService {
         }
         updateComment.setComment(commentDTO.getComment());
         commentRepository.save(updateComment);
-        return updateComment;
-
+        return CommentResponse.builder()
+                .userName(userPrinciple.getUsername())
+                .comment(updateComment.getComment())
+                .status(updateComment.isStatus())
+                .build();
     }
 
     @Override
@@ -114,19 +145,23 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment updateStatusByCommentId(Long commentId) throws CustomException {
+    public CommentResponse updateStatusByCommentId(Long commentId) throws CustomException {
         Comment comment = commentRepository.findById(commentId).orElse(null);
         if(comment == null) {
             throw new CustomException("Comment không tồn tại");
         }
         comment.setStatus(!comment.isStatus());
         commentRepository.save(comment);
-        return comment;
+        return CommentResponse.builder()
+                .userName(comment.getUser().getUsername())
+                .comment(comment.getComment())
+                .status(comment.isStatus())
+                .build();
     }
 
 
     @Override
-    public Comment replyToComment(Long commentId, ReplyComment replyComment) throws CustomException {
+    public ReplyCommentResponse replyToComment(Long commentId, ReplyComment replyComment) throws CustomException {
         UserPrinciple userPrinciple = (UserPrinciple) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
@@ -141,9 +176,12 @@ public class CommentServiceImpl implements CommentService {
                 .user(userPrinciple.getUser())
                 .comment(replyComment.getReplyComment())
                 .status(true)
-                .parentComment(parentComment)
                 .build();
         commentRepository.save(newComment);
-        return newComment;
+        return ReplyCommentResponse.builder()
+                .userName(userPrinciple.getUser().getUsername())
+                .comment(parentComment.getComment())
+                .reply(newComment.getComment())
+                .build();
     }
 }

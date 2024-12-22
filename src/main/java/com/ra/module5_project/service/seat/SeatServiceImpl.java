@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static org.hibernate.internal.util.collections.ArrayHelper.forEach;
+
 @Service
 public class SeatServiceImpl implements SeatService{
     @Autowired
@@ -76,12 +78,6 @@ public class SeatServiceImpl implements SeatService{
     }
 
     @Override
-    public boolean updateAll(List<Seat> seats) {
-        seatRepository.saveAll(seats);
-        return true ;
-    }
-
-    @Override
     public void deleteById(long id) {
         SeatResponse seat = findById(id);
         seatRepository.deleteById(id);
@@ -103,6 +99,11 @@ public class SeatServiceImpl implements SeatService{
 
     }
 
+    @Override
+    public void updateListSeat(List<Seat> seats) {
+        seatRepository.saveAll(seats);
+    }
+
     Seat convertToSeat(SeatRequest seatRequest){
         TypeSeat typeSeat;
         try {
@@ -112,7 +113,7 @@ public class SeatServiceImpl implements SeatService{
         }
         return Seat.builder()
                 .seatName(seatRequest.getSeatName())
-                .status(seatRequest.getStatus())
+                .status(seatRequest.isStatus())
                 .typeSeat(typeSeat)
                 .screenRoom(screenRoomRepository.findById(seatRequest.getScreenRoomId())
                         .orElseThrow(() -> new NoSuchElementException("Not found screen room")))
@@ -124,7 +125,7 @@ public class SeatServiceImpl implements SeatService{
                 .id(seat.getId())
                 .screenName(seat.getScreenRoom().getScreenName())
                 .seatName(seat.getSeatName())
-                .status(seat.getStatus())
+                .status(seat.isStatus())
                 .typeSeat(seat.getTypeSeat())
                 .build();
     }

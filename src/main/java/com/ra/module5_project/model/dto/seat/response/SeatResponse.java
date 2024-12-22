@@ -17,5 +17,5 @@ public class SeatResponse {
 
     private TypeSeat typeSeat ;
 
-    private int status ;
+    private boolean status ;
 }

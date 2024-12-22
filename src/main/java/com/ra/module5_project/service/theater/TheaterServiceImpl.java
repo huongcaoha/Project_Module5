@@ -3,9 +3,7 @@ package com.ra.module5_project.service.theater;
 import com.ra.module5_project.model.dto.theater.request.TheaterRequest;
 import com.ra.module5_project.model.dto.theater.request.TheaterRequestUpdate;
 import com.ra.module5_project.model.dto.theater.response.TheaterPagination;
-import com.ra.module5_project.model.entity.City;
 import com.ra.module5_project.model.entity.Theater;
-import com.ra.module5_project.repository.CityRepository;
 import com.ra.module5_project.repository.TheaterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +17,6 @@ import java.util.NoSuchElementException;
 public class TheaterServiceImpl implements TheaterService{
     @Autowired
     private TheaterRepository theaterRepository ;
-
     @Override
     public TheaterPagination findAllAndSearch(Pageable pageable, String search) {
         Page<Theater> page = null ;
@@ -83,11 +80,6 @@ public class TheaterServiceImpl implements TheaterService{
     @Override
     public List<Theater> getTheaters() {
         return theaterRepository.findAll();
-    }
-
-    @Override
-    public List<Theater> getTheaterByCity(String cityName) {
-       return theaterRepository.getTheaterByCity(cityName);
     }
 
     Theater convertToTheater(TheaterRequest theaterRequest){

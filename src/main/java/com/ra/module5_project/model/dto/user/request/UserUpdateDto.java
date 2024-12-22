@@ -14,6 +14,9 @@ public class UserUpdateDto {
     @NotBlank(message = "username can not blank")
     private String fullName ;
 
+    @NotBlank(message = "Password can not blank")
+    private String password;
+
     @Pattern(regexp = "^0[35789][0-9]{8}$",message = "Phone number is not valid")
     @NotBlank(message = "Phone can not blank")
     private String phone ;
@@ -21,5 +24,5 @@ public class UserUpdateDto {
     @NotBlank(message = "Address can not blank")
     private String address ;
 
-    private String image ;
+    private MultipartFile image ;
 }

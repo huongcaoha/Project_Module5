@@ -24,5 +24,5 @@ public class SeatRequest {
     private String typeSeat ;
 
     @NotNull(message = "Status can not null")
-    private int status  ;
+    private boolean status = true ;
 }

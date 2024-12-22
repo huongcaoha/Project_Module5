@@ -1,11 +1,9 @@
 package com.ra.module5_project.repository;
 
-import com.ra.module5_project.model.entity.Booking;
 import com.ra.module5_project.model.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -25,9 +23,4 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("select u from User u where u.created_at between :startDate and :endDate")
     List<User> newAccountsThisMonth(Date startDate , Date endDate);
-
-    @Modifying
-    @Query("UPDATE User u SET u.getCoin = false WHERE u.getCoin = true")
-    void updateStatusByTrue();
-
 }

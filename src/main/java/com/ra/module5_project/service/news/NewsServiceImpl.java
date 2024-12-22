@@ -13,27 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class NewsServiceImpl implements NewsService {
     @Autowired
     private NewsRepository newsRepository;
-
     @Override
     public Page<News> findAll(Pageable pageable) {
         return newsRepository.findAll(pageable);
-    }
-
-    //Sắp xếp giam dan theo ngay bat dau (ben user)
-    @Override
-    public List<News> findAll() {
-        List<News> newsList = newsRepository.findAll();
-        return newsList.stream()
-                .sorted(Comparator.comparing(News::getStart_time).reversed())
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -42,10 +29,13 @@ public class NewsServiceImpl implements NewsService {
         news.setTitle(newsDTO.getTitle());
         news.setContent(newsDTO.getContent());
         news.setImage(newsDTO.getImage());
-        if (newsDTO.getStart_time().isBefore(LocalDate.now()) ) {
+        if(newsDTO.getStart_time().isBefore(LocalDate.now())) {
             throw new CustomException("Ngày bắt đầu lớn hơn hoặc bằng ngày hiện tại");
         }
         news.setStart_time(newsDTO.getStart_time());
+        if(newsDTO.getEnd_time().isBefore(LocalDate.now())) {
+            throw new CustomException("Ngày kết thúc lớn hơn ngày bắt đầu");
+        }
         news.setEnd_time(newsDTO.getEnd_time());
         newsRepository.save(news);
         return news;
@@ -54,7 +44,7 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News findById(Long id) {
         News news = newsRepository.findById(id).orElse(null);
-        if (news == null) {
+        if(news == null) {
             throw new NoResourceFoundException("Tin tức không tồn tại");
         }
         return news;
@@ -63,33 +53,37 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public News update(NewsUpdateDTO newsUpdateDTO, Long id) throws CustomException, BadRequestException {
         News news = findById(id);
-        if (news == null) {
+        if(news == null) {
             throw new NoResourceFoundException("Tin tức không tồn tại");
         }
 
         // Nếu tên mới khác với tên hiện tại, kiểm tra sự tồn tại
-        boolean check = newsRepository.existsByTitleAndNewsId(newsUpdateDTO.getTitle(), id);
-        if (check) {
+        boolean  check = newsRepository.existsByTitleAndNewsId(newsUpdateDTO.getTitle(), id);
+        if(check) {
             throw new BadRequestException("Tin tức đã tồn tại");
         }
         news.setTitle(newsUpdateDTO.getTitle());
         news.setContent(newsUpdateDTO.getContent());
         news.setImage(newsUpdateDTO.getImage());
+        if(newsUpdateDTO.getStart_time().isBefore(LocalDate.now())) {
+            throw new CustomException("Ngày bắt đầu lớn hơn hoặc bằng ngày hiện tại");
+        }
         news.setStart_time(newsUpdateDTO.getStart_time());
+        if(newsUpdateDTO.getEnd_time().isBefore(LocalDate.now())) {
+            throw new CustomException("Ngày kết thúc lớn hơn ngày bắt đầu");
+        }
         news.setEnd_time(newsUpdateDTO.getEnd_time());
         newsRepository.save(news);
         return news;
     }
 
-    //Xoa NEWS
     @Override
     public void delete(Long id) {
         newsRepository.deleteById(id);
     }
 
-    //Search new
     @Override
     public Page<News> search(String keyword, Pageable pageable) {
-        return newsRepository.findByTitleContaining(keyword, pageable);
+        return newsRepository.findByTitle(keyword, pageable);
     }
 }

@@ -17,7 +17,6 @@ public class News {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    @Column(columnDefinition = "LONGTEXT")
     private String content;
     private String image;
     private LocalDate start_time;

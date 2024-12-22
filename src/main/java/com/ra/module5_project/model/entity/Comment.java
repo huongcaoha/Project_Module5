@@ -32,5 +32,7 @@ public class Comment {
     @JoinColumn(name = "parent_id") // Khóa ngoại đến cột id của cùng bảng
     private Comment parentComment;
 
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> replies = new ArrayList<>(); // Danh sách câu trả lời
     private boolean status;
 }

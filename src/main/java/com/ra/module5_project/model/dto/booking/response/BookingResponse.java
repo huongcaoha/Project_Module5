@@ -7,7 +7,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -29,5 +28,5 @@ public class BookingResponse {
     private double totalPriceFood ;
 
     private boolean status ;
-    private LocalDate created_at ;
+    private LocalDateTime created_at ;
 }

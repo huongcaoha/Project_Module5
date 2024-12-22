@@ -37,8 +37,6 @@ public class ShowTime {
     @JoinColumn(name = "theaterId" , referencedColumnName = "id")
     private Theater theater ;
 
-    @Enumerated(EnumType.STRING)
     private TypeMovie typeMovie;
-
     private LocalDateTime created_date = LocalDateTime.now();
 }

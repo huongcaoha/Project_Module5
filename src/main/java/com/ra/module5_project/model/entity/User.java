@@ -57,9 +57,4 @@ public class User {
 
     private boolean is_deleted = false ;
 
-    @Builder.Default
-    private double coin = 0 ;
-
-    @Builder.Default
-    private boolean getCoin = false ;
 }

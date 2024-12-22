@@ -1,6 +1,5 @@
 package com.ra.module5_project.model.dto.showTime.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ra.module5_project.model.constant.TypeMovie;
 import com.ra.module5_project.model.entity.Movie;
 import com.ra.module5_project.model.entity.ShowTime;
@@ -34,7 +33,6 @@ public class ShowTimeRequest {
 
     @NotBlank(message = "Show time can not blank")
     @CheckDateFutureOrPresent(entityClass = ShowTime.class , fieldName = "showTime")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private String showTime ;
 
     @NotBlank(message = "Type movie can not blank")

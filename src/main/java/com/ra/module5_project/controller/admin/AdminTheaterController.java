@@ -63,10 +63,4 @@ public class AdminTheaterController {
         theaterService.deleteById(id);
         return new ResponseEntity<>("Delete successfully",HttpStatus.OK);
     }
-
-    @GetMapping("/getTheaterByCity")
-    public ResponseEntity<List<Theater>> getTheaterByCity(@RequestParam String cityName){
-        return new ResponseEntity<>(theaterService.getTheaterByCity(cityName),HttpStatus.OK);
-    }
-
 }

@@ -1,11 +1,16 @@
-package com.ra.module5_project.controller.permitAll;
+package com.ra.module5_project.controller.admin;
 
 import com.ra.module5_project.model.dto.city.request.CityRequest;
 import com.ra.module5_project.model.dto.city.request.CityRequestUpdate;
+import com.ra.module5_project.model.dto.city.response.CityPagination;
 import com.ra.module5_project.model.entity.City;
 import com.ra.module5_project.service.city.CityService;
+import com.ra.module5_project.service.city.CityServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api.myService.com/v1/city")
+@RequestMapping("/api.myService.com/v1/admin/city")
 public class AdminCityController {
     @Autowired
     private CityService cityService;

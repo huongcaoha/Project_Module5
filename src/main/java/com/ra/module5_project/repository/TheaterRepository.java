@@ -16,8 +16,5 @@ public interface TheaterRepository extends JpaRepository<Theater,Long> {
     @Query("select count(t) > 0 from Theater  t where t.name = :theaterName")
     boolean checkTheaterNameExist(@Param("theaterName") String theaterName);
 
-    @Query("select t from Theater  t where t.address = :cityName")
-    List<Theater> getTheaterByCity(@Param("cityName") String cityName);
-
 
 }

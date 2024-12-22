@@ -3,7 +3,6 @@ package com.ra.module5_project.service.theater;
 import com.ra.module5_project.model.dto.theater.request.TheaterRequest;
 import com.ra.module5_project.model.dto.theater.request.TheaterRequestUpdate;
 import com.ra.module5_project.model.dto.theater.response.TheaterPagination;
-import com.ra.module5_project.model.entity.City;
 import com.ra.module5_project.model.entity.Theater;
 import org.springframework.data.domain.Pageable;
 
@@ -17,5 +16,4 @@ public interface TheaterService {
     Theater findById(long id);
     boolean checkNameExist(String name);
     List<Theater> getTheaters();
-    List<Theater> getTheaterByCity(String cityName);
 }

@@ -5,10 +5,8 @@ import com.ra.module5_project.model.dto.user.request.UserUpdateDto;
 import com.ra.module5_project.model.dto.user.request.UserUpdatePasswordDto;
 import com.ra.module5_project.model.dto.user.response.UserPaginationAdmin;
 import com.ra.module5_project.model.dto.user.response.UserResponse;
-import com.ra.module5_project.model.entity.Booking;
 import com.ra.module5_project.model.entity.Role;
 import com.ra.module5_project.model.entity.User;
-import com.ra.module5_project.repository.BookingRepository;
 import com.ra.module5_project.repository.UserRepository;
 //import com.ra.module5_project.service.product.ProductService;
 import com.ra.module5_project.service.role.RoleService;
@@ -25,8 +23,6 @@ import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private BookingRepository bookingRepository;
 
     private final UserRepository userRepository;
 
@@ -124,10 +120,12 @@ public class UserServiceImpl implements UserService {
     public UserResponse updateUser(User user, UserUpdateDto userUpdateDto) {
         user.setFullName(userUpdateDto.getFullName());
         user.setUpdated_at(new Date());
-//        user.setPassword(new BCryptPasswordEncoder().encode(userUpdateDto.getPassword()));
+        user.setPassword(new BCryptPasswordEncoder().encode(userUpdateDto.getPassword()));
         user.setPhone(userUpdateDto.getPhone());
         user.setAddress(userUpdateDto.getAddress());
-        user.setAvatar(userUpdateDto.getImage());
+        if(userUpdateDto.getImage().getSize() > 0){
+            user.setAvatar(saveImage(userUpdateDto.getImage()));
+        }
         User newUser = userRepository.save(user);
         return userToUserResponse(newUser);
     }
@@ -147,6 +145,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(long id) {
+
     }
 
     @Override
@@ -202,7 +201,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
     @Override
     public List<UserResponse> newAccountsThisMonth() {
         Date date = new Date();
@@ -218,17 +216,6 @@ public class UserServiceImpl implements UserService {
         // Lấy ngày cuối cùng của tháng
         calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
         Date endDate = calendar.getTime();
-        return userRepository.newAccountsThisMonth(startDate, endDate).stream().map(this::userToUserResponse).toList();
-    }
-
-    @Override
-    public User updateGetCoin(User user) {
-        if(!user.isGetCoin()){
-            user.setGetCoin(true);
-            user.setCoin(user.getCoin() + 1000);
-            return userRepository.save(user);
-        }else {
-            return null ;
-        }
+        return userRepository.newAccountsThisMonth(startDate,endDate).stream().map(this::userToUserResponse).toList();
     }
 }

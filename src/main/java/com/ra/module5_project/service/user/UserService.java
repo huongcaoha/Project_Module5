@@ -25,5 +25,4 @@ public interface UserService {
     void logout(User user);
     boolean blockOrOpen(long userId);
     List<UserResponse> newAccountsThisMonth();
-    User updateGetCoin(User user);
 }
