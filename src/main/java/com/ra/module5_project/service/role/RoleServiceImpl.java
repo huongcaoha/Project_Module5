@@ -20,4 +20,18 @@ public class RoleServiceImpl implements RoleService{
     public Role findByName(String roleName) {
         return roleRepository.findRoleByRoleName(roleName);
     }
+
+    @Override
+    public void initialRole() {
+        List<Role> roles = roleRepository.findAll();
+        if (roles.isEmpty()) {
+            Role roleAdmin = new Role();
+            roleAdmin.setRoleName("ADMIN");
+            Role roleUser = new Role();
+            roleUser.setRoleName("USER");
+            roles.add(roleAdmin);
+            roles.add(roleUser);
+            roleRepository.saveAll(roles);
+        }
+    }
 }

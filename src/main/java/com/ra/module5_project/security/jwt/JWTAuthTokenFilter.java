@@ -44,7 +44,8 @@ public class JWTAuthTokenFilter extends OncePerRequestFilter {
                                = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                   }else {
+                   }
+                   else {
                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"user not login !");
                        return;
                    }

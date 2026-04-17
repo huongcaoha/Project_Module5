@@ -1,6 +1,8 @@
 package com.ra.module5_project.security.jwt;
 
+import com.ra.module5_project.model.entity.User;
 import com.ra.module5_project.security.principle.UserPrinciple;
+import com.ra.module5_project.service.auth.AuthServiceImpl;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,23 +19,50 @@ public class JWTProvider {
     Logger logger = LoggerFactory.getLogger(JWTEntrypoint.class);
     @Value("${jwt_secret}")
     private String secret;
-    public String generateToken(UserPrinciple userPrinciple){
+    public String generateAccessToken(User user){
         Date exp = new Date(new Date().getTime() + expired);
         return Jwts.builder()
-                .setSubject(userPrinciple.getUsername())
+                .setSubject(user.getUsername())
                 .setExpiration(exp)
+                .signWith(SignatureAlgorithm.HS512,secret)
+                .compact();
+    }
+
+    public String generateRefreshToken(User user,String ipAddress,long code){
+        Date exp = new Date(new Date().getTime() + expired);
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .setExpiration(exp)
+                .claim("code", code)
+                .claim("ipAddress", ipAddress)
                 .signWith(SignatureAlgorithm.HS512,secret)
                 .compact();
     }
 
     public Boolean validateToken(String token){
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            return true ;
+            Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+            return claims.get("code", String.class) == null;
         }catch (ExpressionException | SignatureException | ExpiredJwtException | MalformedJwtException ex){
             logger.error("Exception Authentication {}", ex.getMessage());
         }
         return false ;
+
+    }
+
+    public Boolean validateRefreshToken(String token,String ipAddress,long code){
+        try {
+            Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+            String ipAddressToken = claims.get("ipAddress", String.class);
+            Long codeToken = claims.get("code", Long.class);
+            if (ipAddressToken == null || codeToken == null) {
+                return false;
+            } else return ipAddressToken.equals(ipAddress) && codeToken == code;
+        }catch (ExpressionException | SignatureException | ExpiredJwtException | MalformedJwtException ex){
+            logger.error("Exception Authentication {}", ex.getMessage());
+            return false ;
+        }
+
     }
 
     public String getUsernameFromToken(String token){

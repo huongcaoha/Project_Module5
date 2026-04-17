@@ -18,19 +18,30 @@ import java.util.Map;
 
 @Component
 public class JWTEntrypoint implements AuthenticationEntryPoint {
-    Logger logger = LoggerFactory.getLogger(JWTEntrypoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(JWTEntrypoint.class);
+
+    // Inject ObjectMapper có sẵn của Spring
+    private final ObjectMapper objectMapper;
+
+    public JWTEntrypoint(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-//        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//        response.getWriter().write("un authentication");
-        logger.error("Un Authentication {}", authException.getMessage());
-        response.setHeader("error", "UNAUTHORIZED");
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) throws IOException, ServletException {
+
+        logger.error("Unauthorized error: {}", authException.getMessage());
+
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(401);
-        Map<String, Object> errors = new HashMap<>();
-        errors.put("code", 401);
-        errors.put("error", authException.getMessage());
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(response.getOutputStream(), errors);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Dùng hằng số 401 cho chuyên nghiệp
+
+        final Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+        body.put("error", "Unauthorized");
+        body.put("message", authException.getMessage());
+        body.put("path", request.getServletPath()); // Thêm đường dẫn bị lỗi
+
+        objectMapper.writeValue(response.getOutputStream(), body);
     }
 }

@@ -12,6 +12,8 @@ import java.util.Set;
 public class UserLoginResponse {
     private String username ;
     private String accessToken;
+    private String refreshToken;
     private String typeToken;
-    private Set<Role> roles;
+    private long code ;
+    private String roles;
 }
