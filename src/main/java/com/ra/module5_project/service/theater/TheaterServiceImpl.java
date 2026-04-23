@@ -21,6 +21,86 @@ public class TheaterServiceImpl implements TheaterService{
     private TheaterRepository theaterRepository ;
 
     @Override
+    public void initializeTheater() {
+        if (theaterRepository.count() == 0) {
+            List<Theater> theaters = List.of(
+                    Theater.builder()
+                            .name("Rikkei Cinema Hà Đông")
+                            .address("Tầng 4, Mê Linh Plaza, Hà Đông, Hà Nội")
+                            .phoneNumber("024.1234.5678")
+                            .numberOfScreens(8)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Giải Phóng")
+                            .address("Số 123 Giải Phóng, Hai Bà Trưng, Hà Nội")
+                            .phoneNumber("024.8888.9999")
+                            .numberOfScreens(6)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Quận 1")
+                            .address("Số 1 Lê Duẩn, Bến Nghé, Quận 1, TP. HCM")
+                            .phoneNumber("028.3333.4444")
+                            .numberOfScreens(10)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Thảo Điền")
+                            .address("Vincom Mega Mall, Thảo Điền, Quận 2, TP. HCM")
+                            .phoneNumber("028.5555.6666")
+                            .numberOfScreens(7)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Đà Nẵng Riverside")
+                            .address("Số 2 đường 2/9, Bình Hiên, Hải Châu, Đà Nẵng")
+                            .phoneNumber("0236.111.222")
+                            .numberOfScreens(5)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Cần Thơ")
+                            .address("Tòa nhà TTC, Hai Bà Trưng, Ninh Kiều, Cần Thơ")
+                            .phoneNumber("0292.444.555")
+                            .numberOfScreens(4)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Hải Phòng")
+                            .address("Lê Hồng Phong, Đông Khê, Ngô Quyền, Hải Phòng")
+                            .phoneNumber("0225.777.888")
+                            .numberOfScreens(6)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Nha Trang")
+                            .address("Số 60 Thái Nguyên, Phương Sài, Nha Trang")
+                            .phoneNumber("0258.999.000")
+                            .numberOfScreens(5)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Biên Hòa")
+                            .address("Phạm Văn Thuận, Tân Mai, Biên Hòa, Đồng Nai")
+                            .phoneNumber("0251.222.333")
+                            .numberOfScreens(6)
+                            .build(),
+
+                    Theater.builder()
+                            .name("Rikkei Cinema Vũng Tàu")
+                            .address("Số 36 Nguyễn Thái Học, Phường 7, Vũng Tàu")
+                            .phoneNumber("0254.666.777")
+                            .numberOfScreens(4)
+                            .build()
+            );
+
+            theaterRepository.saveAll(theaters);
+            System.out.println(">>> Đã khởi tạo 10 cụm rạp chiếu phim thành công!");
+        }
+    }
+
+    @Override
     public TheaterPagination findAllAndSearch(Pageable pageable, String search) {
         Page<Theater> page = null ;
         if(search != null){

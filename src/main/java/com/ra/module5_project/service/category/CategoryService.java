@@ -19,4 +19,5 @@ public interface CategoryService {
     void delete(Long id) throws CustomException;
     Page<Category> findByCategoryName(String keyword, Pageable pageable);
     Page<Category>findAllByStatus(Pageable pageable);
+    void initializeCategory();
 }

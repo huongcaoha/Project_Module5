@@ -18,5 +18,6 @@ public interface ComboFoodService {
     ComboFood convertUpdate (ComboFoodUpdate comboFoodUpdate);
     ComboFood updateImage(ComboFood comboFood);
     List<ComboFood> userFindAll();
+    void initializeComboFood();
 
 }

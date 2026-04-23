@@ -25,4 +25,5 @@ public interface MovieService {
 
     List<Movie> findAllMoviesNews();
     List<Movie> getMovieByMonth();
+    void initializeMovie() ;
 }

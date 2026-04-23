@@ -86,4 +86,25 @@ public class CategoryServiceImpl implements CategoryService {
     public Page<Category> findAllByStatus(Pageable pageable) {
         return categoryRepository.findAllByStatus(true,pageable);
     }
+
+    @Override
+    public void initializeCategory() {
+        if (categoryRepository.count() == 0) {
+            List<Category> categories = List.of(
+                    Category.builder().categoryName("Hành động").description("Những bộ phim có nhịp độ nhanh, nhiều cảnh rượt đuổi và võ thuật").status(true).build(),
+                    Category.builder().categoryName("Kinh dị").description("Phim gây sợ hãi, giật gân với các yếu tố tâm linh hoặc siêu nhiên").status(true).build(),
+                    Category.builder().categoryName("Hài hước").description("Mang lại tiếng cười qua các tình huống trớ trêu và lời thoại hóm hỉnh").status(true).build(),
+                    Category.builder().categoryName("Tâm lý - Tình cảm").description("Khai thác sâu vào cảm xúc và các mối quan hệ xã hội của nhân vật").status(true).build(),
+                    Category.builder().categoryName("Viễn tưởng (Sci-Fi)").description("Khám phá các khái niệm tương lai như công nghệ cao, vũ trụ và người ngoài hành tinh").status(true).build(),
+                    Category.builder().categoryName("Hoạt hình").description("Phim sử dụng kỹ thuật đồ họa máy tính hoặc vẽ tay dành cho mọi lứa tuổi").status(true).build(),
+                    Category.builder().categoryName("Tài liệu").description("Phim phản ánh thực tế về các sự kiện, con người hoặc thiên nhiên một cách chân thực").status(true).build(),
+                    Category.builder().categoryName("Trinh thám - Hình sự").description("Tập trung vào quá trình phá án và những âm mưu kịch tính").status(true).build(),
+                    Category.builder().categoryName("Phiêu lưu").description("Những chuyến hành trình khám phá các vùng đất mới và những thử thách đầy bất ngờ").status(true).build(),
+                    Category.builder().categoryName("Thần thoại - Kỳ ảo").description("Thế giới của phép thuật, các sinh vật huyền bí và truyền thuyết cổ xưa").status(true).build()
+            );
+
+            categoryRepository.saveAll(categories);
+            System.out.println(">>> Đã khởi tạo 10 danh mục phim thực tế thành công!");
+        }
+    }
 }

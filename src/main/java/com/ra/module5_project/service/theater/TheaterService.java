@@ -18,4 +18,6 @@ public interface TheaterService {
     boolean checkNameExist(String name);
     List<Theater> getTheaters();
     List<Theater> getTheaterByCity(String cityName);
+    void initializeTheater() ;
+
 }

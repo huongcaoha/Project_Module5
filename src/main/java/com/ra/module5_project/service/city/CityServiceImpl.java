@@ -20,6 +20,27 @@ public class CityServiceImpl implements CityService{
     private CityRepository cityRepository ;
 
     @Override
+    public void initializeCity() {
+        if (cityRepository.count() == 0) {
+            List<City> cities = List.of(
+                    City.builder().cityName("Hà Nội").build(),
+                    City.builder().cityName("TP. Hồ Chí Minh").build(),
+                    City.builder().cityName("Đà Nẵng").build(),
+                    City.builder().cityName("Hải Phòng").build(),
+                    City.builder().cityName("Cần Thơ").build(),
+                    City.builder().cityName("Nha Trang").build(),
+                    City.builder().cityName("Huế").build(),
+                    City.builder().cityName("Đà Lạt").build(),
+                    City.builder().cityName("Vũng Tàu").build(),
+                    City.builder().cityName("Biên Hòa").build()
+            );
+
+            cityRepository.saveAll(cities);
+            System.out.println(">>> Đã khởi tạo 10 thành phố tại Việt Nam thành công!");
+        }
+    }
+
+    @Override
     public List<City> getAll() {
         return cityRepository.findAll();
     }
