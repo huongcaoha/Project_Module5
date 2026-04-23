@@ -33,6 +33,45 @@ public class ScreenRoomServiceImpl implements ScreenRoomService{
     @Autowired
     private SeatRepository seatRepository;
 
+    @Override
+    public void initializeScreenRoom() {
+        if (screenRoomRepository.count() == 0) {
+            // 1. Lấy danh sách rạp đã tạo từ database
+            List<Theater> theaters = theaterRepository.findAll();
+            if (theaters.isEmpty()) {
+                System.out.println(">>> Cần khởi tạo Theater trước khi tạo ScreenRoom!");
+                return;
+            }
+
+            List<ScreenRoom> screenRooms = new ArrayList<>();
+
+            for (Theater theater : theaters) {
+                // Mỗi rạp chúng ta tạo 2 phòng chiếu với cấu hình khác nhau
+
+                // Phòng 1: Cấu hình Standard (10 hàng x 12 cột)
+                screenRooms.add(ScreenRoom.builder()
+                        .theater(theater)
+                        .screenName("Phòng 01 - " + theater.getName())
+                        .numberRowSeat(10)
+                        .numberColSeat(12)
+                        .isDoubleSeat(true) // Có hỗ trợ ghế đôi
+                        .build());
+
+                // Phòng 2: Cấu hình Premium/VIP (8 hàng x 10 cột)
+                screenRooms.add(ScreenRoom.builder()
+                        .theater(theater)
+                        .screenName("Phòng 02 - " + theater.getName())
+                        .numberRowSeat(8)
+                        .numberColSeat(10)
+                        .isDoubleSeat(false) // Phòng chuyên dụng không ghế đôi
+                        .build());
+            }
+
+            screenRoomRepository.saveAll(screenRooms);
+            System.out.println(">>> Đã khởi tạo 20 phòng chiếu cho 10 cụm rạp thành công!");
+        }
+    }
+
 
     @Override
     public ScreenRoomPagination findAllAndSearch(Pageable pageable, String search) {

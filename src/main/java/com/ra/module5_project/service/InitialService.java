@@ -7,6 +7,7 @@ import com.ra.module5_project.service.city.CityService;
 import com.ra.module5_project.service.comboFood.ComboFoodService;
 import com.ra.module5_project.service.movie.MovieService;
 import com.ra.module5_project.service.role.RoleService;
+import com.ra.module5_project.service.screenRoom.ScreenRoomService;
 import com.ra.module5_project.service.theater.TheaterService;
 import com.ra.module5_project.service.ticket.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class InitialService {
     private TheaterService theaterService ;
     @Autowired
     private TicketService ticketService ;
+    @Autowired
+    private ScreenRoomService screenRoomService ;
 
     public void initialApplication(){
         roleService.initialRole();
@@ -37,6 +40,7 @@ public class InitialService {
         comboFoodService.initializeComboFood();
         theaterService.initializeTheater();
         ticketService.initializeTicketPrice();
+        screenRoomService.initializeScreenRoom();
     }
 
 }

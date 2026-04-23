@@ -18,4 +18,5 @@ public interface ScreenRoomService {
     ScreenRoomResponse convertToScreenRoomResponse(ScreenRoom screenRoom);
     List<ScreenRoom> getScreenByTheater(long theaterId);
     List<ScreenRoom> getAll();
+    void initializeScreenRoom();
 }
