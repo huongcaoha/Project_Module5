@@ -16,6 +16,7 @@ public interface AuthService {
      User changePassword(UserUpdatePasswordDto userUpdatePasswordDto) ;
      boolean register(UserRegisterRequest userRegisterRequest);
      ResponseEntity<String> activeAccount(String email , long code);
-     String getNewAccessToken(RefreshTokenDTO refreshTokenDTO, HttpServletRequest request);
+     ResponseEntity<String> getNewAccessToken(RefreshTokenDTO refreshTokenDTO, HttpServletRequest request);
+     ResponseEntity<String> logout(User user);
 }
 

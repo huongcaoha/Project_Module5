@@ -5,6 +5,7 @@ import com.ra.module5_project.model.dto.user.request.UserLoginRequest;
 import com.ra.module5_project.model.dto.user.request.UserRegisterRequest;
 import com.ra.module5_project.model.dto.user.request.UserUpdatePasswordDto;
 import com.ra.module5_project.model.dto.user.response.UserLoginResponse;
+import com.ra.module5_project.model.entity.RefreshToken;
 import com.ra.module5_project.model.entity.Role;
 import com.ra.module5_project.model.entity.User;
 import com.ra.module5_project.repository.RoleRepository;
@@ -12,6 +13,7 @@ import com.ra.module5_project.repository.UserRepository;
 import com.ra.module5_project.security.SecurityConfig;
 import com.ra.module5_project.security.jwt.JWTProvider;
 import com.ra.module5_project.security.principle.UserPrinciple;
+import com.ra.module5_project.service.refreshToken.RefreshTokenService;
 import com.ra.module5_project.service.sendMail.ActiveAccount;
 import com.ra.module5_project.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,6 +25,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,6 +43,9 @@ public class AuthServiceImpl implements AuthService{
     private RoleRepository roleRepository;
     @Autowired
     private SecurityConfig securityConfig ;
+    @Autowired
+    private RefreshTokenService refreshTokenService ;
+
     @Override
     public UserLoginResponse login(UserLoginRequest userLoginRequest ,HttpServletRequest request) {
         Authentication authentication;
@@ -51,10 +57,28 @@ public class AuthServiceImpl implements AuthService{
         userRepository.save(user);
         long code = randomCode();
         String ipAddress = getClientIp(request);
+        String refreshToken = jwtProvider.generateRefreshToken(user,code);
+        RefreshToken oldRefreshToken = refreshTokenService.findByUserId(user.getId());
+        if(oldRefreshToken == null){
+           oldRefreshToken = RefreshToken
+                    .builder()
+                    .updateTime(LocalDateTime.now())
+                    .token(refreshToken)
+                    .ipAddress(ipAddress)
+                    .user(user)
+                    .build();
+
+        }else {
+            oldRefreshToken.setToken(refreshToken);
+            oldRefreshToken.setIpAddress(ipAddress);
+            oldRefreshToken.setUpdateTime(LocalDateTime.now());
+
+        }
+        refreshTokenService.save(oldRefreshToken);
         return UserLoginResponse.builder()
                 .username(userPrinciple.getUsername())
                 .accessToken(token)
-                .refreshToken(jwtProvider.generateRefreshToken(user,ipAddress,code))
+                .refreshToken(refreshToken)
                 .code(code)
                 .typeToken("Bearer")
                 .roles(userPrinciple.getUser().getRoles().stream().map(Role::getRoleName).collect(Collectors.joining(",")))
@@ -121,16 +145,32 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String getNewAccessToken(RefreshTokenDTO refreshTokenDTO , HttpServletRequest request) {
+    public ResponseEntity<String> getNewAccessToken(RefreshTokenDTO refreshTokenDTO , HttpServletRequest request) {
         String ipAddress = getClientIp(request);
-        boolean checkValidateToken = jwtProvider.validateRefreshToken(refreshTokenDTO.getRefreshToken(),ipAddress,refreshTokenDTO.getCode());
+        boolean checkValidateToken = jwtProvider.validateRefreshToken(refreshTokenDTO.getRefreshToken());
         if(checkValidateToken){
             String username = jwtProvider.getUsernameFromToken(refreshTokenDTO.getRefreshToken());
             User user = userRepository.getUserByUsername(username);
-            return jwtProvider.generateAccessToken(user);
-        }else {
-            return "Token không hợp lệ" ;
+            RefreshToken oldRefreshToken = refreshTokenService.findByUserId(user.getId());
+            if(oldRefreshToken.getToken().equals(refreshTokenDTO.getRefreshToken())
+                    && oldRefreshToken.getIpAddress().equals(ipAddress)){
+                return new ResponseEntity<>(jwtProvider.generateAccessToken(user),HttpStatus.OK);
+            }
         }
+            return new ResponseEntity<>("Token không hợp lệ", HttpStatus.BAD_REQUEST) ;
+    }
+
+    @Override
+    public ResponseEntity<String> logout(User user) {
+        try {
+            user.setStatusLogin(false);
+            userRepository.save(user);
+            return new ResponseEntity<>("Đăng xuất thành công",HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>("Có lỗi xảy ra , hãy kiểm tra log",HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     public static String getClientIp(HttpServletRequest request) {

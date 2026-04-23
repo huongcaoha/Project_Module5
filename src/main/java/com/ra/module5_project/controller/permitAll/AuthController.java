@@ -4,16 +4,19 @@ import com.ra.module5_project.model.dto.token.RefreshTokenDTO;
 import com.ra.module5_project.model.dto.user.request.UserLoginRequest;
 import com.ra.module5_project.model.dto.user.request.UserRegisterRequest;
 import com.ra.module5_project.model.dto.user.response.UserLoginResponse;
-import com.ra.module5_project.model.entity.User;
-import com.ra.module5_project.repository.UserRepository;
-import com.ra.module5_project.security.jwt.JWTProvider;
+
+import com.ra.module5_project.security.principle.UserPrinciple;
 import com.ra.module5_project.service.auth.AuthService;
+import com.sun.security.auth.UserPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api.myService.com/v1/auth")
@@ -49,8 +52,14 @@ public class AuthController {
     }
 
     @GetMapping("/getRefreshToken")
-    public ResponseEntity<?> getRefreshToke(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO,
+    public ResponseEntity<String> getRefreshToke(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO,
                                             HttpServletRequest request){
-        return new ResponseEntity<>(authService.getNewAccessToken(refreshTokenDTO,request),HttpStatus.OK);
+        return authService.getNewAccessToken(refreshTokenDTO,request);
+    }
+
+    @GetMapping("/logout")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> logout(@AuthenticationPrincipal UserPrinciple userPrinciple){
+        return authService.logout(userPrinciple.getUser());
     }
 }

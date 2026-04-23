@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.expression.ExpressionException;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
@@ -28,13 +30,13 @@ public class JWTProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(User user,String ipAddress,long code){
-        Date exp = new Date(new Date().getTime() + expired);
+    public String generateRefreshToken(User user, long code){
+        LocalDateTime exp = LocalDateTime.now().plusDays(30);
+        Date date = Date.from(exp.atZone(ZoneId.systemDefault()).toInstant());;
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .setExpiration(exp)
-                .claim("code", code)
-                .claim("ipAddress", ipAddress)
+                .setExpiration(date)
+                .claim("code",code)
                 .signWith(SignatureAlgorithm.HS512,secret)
                 .compact();
     }
@@ -50,14 +52,11 @@ public class JWTProvider {
 
     }
 
-    public Boolean validateRefreshToken(String token,String ipAddress,long code){
+    public Boolean validateRefreshToken(String token){
         try {
             Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-            String ipAddressToken = claims.get("ipAddress", String.class);
             Long codeToken = claims.get("code", Long.class);
-            if (ipAddressToken == null || codeToken == null) {
-                return false;
-            } else return ipAddressToken.equals(ipAddress) && codeToken == code;
+            return codeToken != null;
         }catch (ExpressionException | SignatureException | ExpiredJwtException | MalformedJwtException ex){
             logger.error("Exception Authentication {}", ex.getMessage());
             return false ;
