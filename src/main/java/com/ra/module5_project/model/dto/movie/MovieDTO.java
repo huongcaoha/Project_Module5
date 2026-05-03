@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class MovieDTO {
     private int duration; //Thời lượng phim
 
     @NotNull(message = "Ngày phát hành không được để trống")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate; //Ngày phát hành
 
     @NotBlank(message = "Đạo diễn không được để trống")

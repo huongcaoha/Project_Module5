@@ -1,4 +1,4 @@
-package com.ra.module5_project.controller.permitAll;
+package com.ra.module5_project.controller.admin;
 
 import com.ra.module5_project.model.dto.city.request.CityRequest;
 import com.ra.module5_project.model.dto.city.request.CityRequestUpdate;
