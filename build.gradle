@@ -2,6 +2,12 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'jacoco'
+}
+
+// 2. Cấu hình phiên bản Jacoco
+jacoco {
+    toolVersion = "0.8.11"
 }
 
 group = 'com.ra'
@@ -44,4 +50,14 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport // Chạy report ngay sau khi test hoàn thành
+}
+
+// 4. Tùy chỉnh báo cáo (HTML là dễ xem nhất)
+jacocoTestReport {
+    dependsOn test // Bỏ dấu ngoặc đơn và dùng chữ O viết hoa
+    reports {
+        xml.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
 }

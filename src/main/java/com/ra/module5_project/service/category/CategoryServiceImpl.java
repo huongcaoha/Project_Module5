@@ -107,4 +107,9 @@ public class CategoryServiceImpl implements CategoryService {
             System.out.println(">>> Đã khởi tạo 10 danh mục phim thực tế thành công!");
         }
     }
+
+    @Override
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
 }

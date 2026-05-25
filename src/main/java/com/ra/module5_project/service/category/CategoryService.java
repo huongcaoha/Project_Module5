@@ -20,4 +20,5 @@ public interface CategoryService {
     Page<Category> findByCategoryName(String keyword, Pageable pageable);
     Page<Category>findAllByStatus(Pageable pageable);
     void initializeCategory();
+    List<Category> findAll();
 }
